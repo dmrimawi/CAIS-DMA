@@ -5,7 +5,7 @@
 # Email: dmrimawi@gmail.com + drimawi@unibz.it
 # This is an abstract class that defines the methods of any preprocessor in the framework
 # Preprocessors are classes that performs filters, normalizations, and other data preperation
-# before being fed to the next step (disrupters)
+# before being fed to the next step (disruptors)
 
 #####################
 #   Native Imports  #
@@ -56,14 +56,6 @@ class Preprocessor(ABC):
         """
 
     @abstractmethod
-    def extract_dataset_features(self):
-        """
-        Update the fetched data with a new data field called features, which reprsents the x_training features
-        of a the dataset after applying the Preprocessor target
-        """
-        pass
-
-    @abstractmethod
     def dump(self):
         """
         Dump the new features to JSON file, the JSON formate is:
@@ -71,7 +63,6 @@ class Preprocessor(ABC):
             0: {
                 orignal: pointer to the original data row,
                 updated: the new raw data after apply the Preprocessor,
-                features: the extracted features from the updated data,
             },
         }
         """
