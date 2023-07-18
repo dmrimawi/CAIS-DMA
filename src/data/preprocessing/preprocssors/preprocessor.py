@@ -54,6 +54,7 @@ class Preprocessor(ABC):
         """
         Calls the private methods for the Preprocessor, which updates the raw data with this preprocessor filters
         """
+        pass
 
     @abstractmethod
     def dump(self):
