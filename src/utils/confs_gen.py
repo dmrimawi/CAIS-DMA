@@ -23,6 +23,7 @@ import argparse
 #   Local Imports  #
 ####################
 import CUDE_CONSTANTS
+from CUDE_Logger import logging
 
 ################
 #   CONSTANTS  #
@@ -149,7 +150,7 @@ class ConfsGen:
                                                                                               parser.dump)))
             rc = rc or 1
         if rc:
-            print("-E- Error(s) during parsing the command arguments: {}".format("\n".join(errors)))
+            logging.error("Error(s) during parsing the command arguments: {}".format("\n".join(errors)))
             parser.print_help()
         return rc, parser
 
