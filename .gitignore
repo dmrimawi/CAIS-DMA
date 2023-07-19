@@ -161,4 +161,4 @@ cython_debug/
 
 # CUDE Ignores
 .vscode/
-*.ini
+src/results/dump/*
