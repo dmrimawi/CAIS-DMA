@@ -1,7 +1,7 @@
 import os
 # DEFAULTS
 DEFAULT_SEC = "defaults"
-HOME = os.path.abspath(os.path.join(os.getcwd(), "..", ".."))
+HOME = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", '..'))
 SRC = os.path.abspath(os.path.join(HOME , "src"))
 # DATA
 DATA_SEC = "data"
