@@ -247,7 +247,10 @@ class ConfsGen:
             config = self.prepare_results_section(parser, config)
             self.write_inis_to_file(parser.ini_file, config)
         return rc
-
-congs_gen = ConfsGen()
-rc = congs_gen.run()
-sys.exit(rc)
+try:
+    congs_gen = ConfsGen()
+    rc = congs_gen.run()
+    sys.exit(rc)
+except Exception as exp:
+    logging.error("Failed due to: {}".format(str(exp)))
+    sys.exit(1)

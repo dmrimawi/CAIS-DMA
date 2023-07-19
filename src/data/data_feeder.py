@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
 #       Class Desciption
-# Author:
+# Author: Diaeddin Rimawi
+# Email: dmrimawi@gmail.com + drimawi@unibz.it
+# 
 
 #####################
 #   Native Imports  #
