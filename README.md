@@ -1,2 +1,2 @@
-# CUDE
-Collaborative AI Systems Under Disruptive Events
+# A Decision-Making Assistant for Collaborative AI Systems
+## Structure
