@@ -22,7 +22,7 @@ import argparse
 ####################
 #   Local Imports  #
 ####################
-import CUDE_CONSTANTS
+from utils import CUDE_CONSTANTS
 from CUDE_Logger import logging
 
 ################
@@ -46,7 +46,7 @@ class ConfsGen:
                     description='Generates/Updates the configuration file confs.ini',
                     epilog='All Copyrights Reserved - drimawi@unibz.it')
         return parser
-    
+
     def add_args(self, parser):
         """
         Add comman line arguments for automation
@@ -100,55 +100,55 @@ class ConfsGen:
         """
         This method verify that all arguements are inserted correctly
         """
-        rc = 0
+        rc = CUDE_CONSTANTS.SUCCESS
         config = configparser.ConfigParser()
         errors = []
         parser = parser.parse_args()
         if not os.path.isfile(parser.ini_file):
             errors.append("File: {} does not exist, or not a file.".format(parser.ini_file))
-            rc = rc or 1
+            rc = rc or CUDE_CONSTANTS.FAIL
         else:
             config.read(parser.ini_file)
         if (not config.sections() or any(sec not in config.sections() for sec in CUDE_CONSTANTS.LEVEL_1_SECTIONS)) \
             and parser.old_confs:
             errors.append("Cannot use old confs, while ini file is empty or corrupted")
-            rc = rc or 1
+            rc = rc or CUDE_CONSTANTS.FAIL
         # Data options verification
         if not os.path.exists(os.path.join(CUDE_CONSTANTS.DATASET, parser.dataset)):
             errors.append("No such file or direcotory exists for dataset: {}".format(os.path.join( \
                                                             CUDE_CONSTANTS.DATASET, parser.dataset)))
-            rc = rc or 1
+            rc = rc or CUDE_CONSTANTS.FAIL
         preprocessors_not_exist = self.check_paths_exits(CUDE_CONSTANTS.PREPROCESSORS, parser.preprocessors)
         if preprocessors_not_exist:
             errors.append("The following preprocessors does not exists: {}".format("\n".join(preprocessors_not_exist)))
-            rc = rc or 1
+            rc = rc or CUDE_CONSTANTS.FAIL
         disruptors_not_exist = self.check_paths_exits(CUDE_CONSTANTS.DISRUPTORS, parser.disruptors)
         if disruptors_not_exist:
             errors.append("The following preprocessors does not exists: {}".format("\n".join(disruptors_not_exist)))
-            rc = rc or 1
+            rc = rc or CUDE_CONSTANTS.FAIL
         try:
             x = float(parser.data_split)
         except Exception as exp:
             errors.append("Failed to parse the data split rate: {}, exception: {}".format(parser.data_split), str(exp))
-            rc = rc or 1
+            rc = rc or CUDE_CONSTANTS.FAIL
         # Decision making options verification
         actions_not_exist = self.check_paths_exits(CUDE_CONSTANTS.ACTIONS, parser.actions)
         if actions_not_exist:
             errors.append("The following actions does not exists: {}".format("\n".join(actions_not_exist)))
-            rc = rc or 1
+            rc = rc or CUDE_CONSTANTS.FAIL
         mechanisms_not_exist = self.check_paths_exits(CUDE_CONSTANTS.MECHANISMS, parser.mechanisms)
         if mechanisms_not_exist:
             errors.append("The following mechanisms does not exists: {}".format("\n".join(mechanisms_not_exist)))
-            rc = rc or 1
+            rc = rc or CUDE_CONSTANTS.FAIL
         if not os.path.exists(os.path.join(CUDE_CONSTANTS.PERFORMANCE_MEASUREMENTS, parser.per_measurement)):
             errors.append("The following performance measure does not exists: {}".format(os.path.join( \
                                                     CUDE_CONSTANTS.PERFORMANCE_MEASUREMENTS,  parser.per_measurement)))
-            rc = rc or 1
+            rc = rc or CUDE_CONSTANTS.FAIL
         # Results options verification
         if not os.path.exists(os.path.join(CUDE_CONSTANTS.RESULTS, parser.dump)):
             errors.append("The following dump folder does not exists: {}".format(os.path.join(CUDE_CONSTANTS.RESULTS, \
                                                                                               parser.dump)))
-            rc = rc or 1
+            rc = rc or CUDE_CONSTANTS.FAIL
         if rc:
             logging.error("Error(s) during parsing the command arguments: {}".format("\n".join(errors)))
             parser.print_help()
@@ -247,6 +247,8 @@ class ConfsGen:
             config = self.prepare_results_section(parser, config)
             self.write_inis_to_file(parser.ini_file, config)
         return rc
+
+
 try:
     congs_gen = ConfsGen()
     rc = congs_gen.run()

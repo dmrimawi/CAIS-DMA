@@ -25,6 +25,7 @@ from utils.Exceptions.CUDEEXCEPTION import CUDEException
 #   CONSTANTS  #
 ################
 
+
 class Common():
     def __ini__(self):
         pass
@@ -55,7 +56,7 @@ class Common():
         """
         This method copy the folder with its content from source @src to a given destination @dest
         """
-        if Common.check_if_file_dir_exists(src) and Common.check_if_file_dir_exists(dest):
+        if Common.check_if_file_dir_exists(src):
             shutil.copytree(src, dest)
         else:
             raise CUDEException("Either: {}, or {} not exist".format(src, dest))

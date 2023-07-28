@@ -18,7 +18,7 @@ import cv2 as cv
 ####################
 #   Local Imports  #
 ####################
-from preprocessor import Preprocessor
+from data.preprocessing.preprocssors.preprocessor import Preprocessor
 from utils.Exceptions.CUDEEXCEPTION import CUDEException
 from utils.CUDE_Common import Common
 

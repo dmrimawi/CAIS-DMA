@@ -9,18 +9,22 @@ class logging():
     def __init__(self):
         pass
 
-    def info(self, msg):
+    @staticmethod
+    def info(msg):
         # TODO: in addition to print write to log file
         print("-I- {}".format(msg))
-    
-    def warning(self, msg):
+
+    @staticmethod
+    def warning(msg):
         # TODO: in addition to print write to log file
         print("-W- {}".format(msg))
-    
-    def error(self, msg):
+
+    @staticmethod
+    def error(msg):
         # TODO: in addition to print write to log file
         print("-E- {}".format(msg))
 
-    def debug(self, msg):
+    @staticmethod
+    def debug(msg):
         # TODO: writes to log files only
         pass
