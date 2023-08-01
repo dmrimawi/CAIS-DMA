@@ -13,7 +13,7 @@ __Status__ : In Progress
 
 ## Structure
 
-# Reference
+# References
 To use this CAIS-DMA, please reference at least one of the following papers:
 
 ```
