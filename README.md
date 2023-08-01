@@ -3,7 +3,7 @@ CAIS-DMA is a decision-making assistant for collaborative AI systems.
 
 __Authors__ : Diaeddin Rimawi (1), 
 
-__Email__ : dmrimawi@gmail.com (1), drimawi@gmail.com (1), 
+__Email__ : dmrimawi@gmail.com (1), drimawi@unibz.it (1), 
 
 __Title__ : Collaborative Artificial Intelligence System Decision-Making Assistant
 
