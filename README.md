@@ -9,12 +9,12 @@ __Title__ : Collaborative Artificial Intelligence System Decision-Making Assista
 
 __Status__ : In Progress
 
-## Abstract
+## About CAIS-DMA
 
-## Structure
+### Structure
 
 # References
-To use this CAIS-DMA, please reference at least one of the following papers:
+To use CAIS-DMA, please reference at least one of the following papers:
 
 ```
 Title = GResilience: Trading off between the Greenness and the Resilience of Collaborative AI Systems
