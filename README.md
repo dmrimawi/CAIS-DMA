@@ -1,6 +1,5 @@
 # CAIS-DMA
 ![CAIS-DMA Icon](https://github.com/dmrimawi/CAIS-DMA/blob/master/CAIS-DMA.png?raw=true)
-
 CAIS-DMA is a decision-making assistant for collaborative AI systems.
 
 __Authors__ : Diaeddin Rimawi (1), 
