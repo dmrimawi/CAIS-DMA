@@ -18,7 +18,7 @@ import sys
 ####################
 #   Local Imports  #
 ####################
-from results.mvc.controllers.prepare_experiment import ExperimentDesign
+from src.monitoring.mvc.controllers.prepare_experiment import ExperimentDesign
 from src.utils.DMALogger import logging
 
 ################

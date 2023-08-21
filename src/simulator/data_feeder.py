@@ -18,7 +18,7 @@ import os
 ####################
 #   Local Imports  #
 ####################
-from data.preprocessing.preprocssors.preprocessors_factory import PreprocessorsFactory
+from src.simulator.preprocessing.preprocssors.preprocessors_factory import PreprocessorsFactory
 from src.utils.DMALogger import logging
 from src.utils.DMACommon import Common
 

@@ -18,7 +18,7 @@ import cv2 as cv
 ####################
 #   Local Imports  #
 ####################
-from data.preprocessing.preprocssors.preprocessor import Preprocessor
+from src.simulator.preprocessing.preprocssors.preprocessor import Preprocessor
 from src.utils.Exceptions.DMAException import DMAException
 from src.utils.DMACommon import Common
 
