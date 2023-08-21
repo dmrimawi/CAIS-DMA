@@ -22,7 +22,7 @@ from abc import ABC, abstractmethod
 ####################
 #   Local Imports  #
 ####################
-from utils.CUDE_Logger import logging
+from src.utils.DMALogger import logging
 
 ################
 #   CONSTANTS  #

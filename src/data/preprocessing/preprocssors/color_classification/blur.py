@@ -19,8 +19,8 @@ import cv2 as cv
 #   Local Imports  #
 ####################
 from data.preprocessing.preprocssors.preprocessor import Preprocessor
-from utils.Exceptions.CUDEEXCEPTION import CUDEException
-from utils.CUDE_Common import Common
+from src.utils.Exceptions.DMAException import DMAException
+from src.utils.DMACommon import Common
 
 ################
 #   CONSTANTS  #
@@ -33,7 +33,7 @@ class Blur(Preprocessor):
         This preprocessor blur images to a specific ratio, where ratio in [0, 1]
         """
         if not type(ratio) == tuple:
-            raise CUDEException("In Preprocessor {}, ratio value {}, while it should be tuple of two integers".format(
+            raise DMAException("In Preprocessor {}, ratio value {}, while it should be tuple of two integers".format(
                 self.name, ratio
             ))
         self.ratio = ratio

@@ -22,8 +22,8 @@ import argparse
 ####################
 #   Local Imports  #
 ####################
-from utils import CUDE_CONSTANTS
-from CUDE_Logger import logging
+from src.utils import DMAConstants
+from src.utils.DMALogger import logging
 
 ################
 #   CONSTANTS  #
@@ -59,7 +59,7 @@ class ConfsGen:
         general_options.add_argument('--use-old-confs', default=False, dest='old_confs', action='store_true',
                             help='Do not prompt the user for custom confs and use the ini file data \
                                 Note: This is only available in case of the existance of old confs')
-        # The dataset folder used to test the CUDE
+        # The dataset folder used to test the CAIS-DMA
         data_options = parser.add_argument_group('Data Related Options')
         data_options.add_argument('--dataset', dest='dataset', default='color_classification',
                             help='Dataset folder name')
@@ -100,55 +100,55 @@ class ConfsGen:
         """
         This method verify that all arguements are inserted correctly
         """
-        rc = CUDE_CONSTANTS.SUCCESS
+        rc = DMAConstants.SUCCESS
         config = configparser.ConfigParser()
         errors = []
         parser = parser.parse_args()
         if not os.path.isfile(parser.ini_file):
             errors.append("File: {} does not exist, or not a file.".format(parser.ini_file))
-            rc = rc or CUDE_CONSTANTS.FAIL
+            rc = rc or DMAConstants.FAIL
         else:
             config.read(parser.ini_file)
-        if (not config.sections() or any(sec not in config.sections() for sec in CUDE_CONSTANTS.LEVEL_1_SECTIONS)) \
+        if (not config.sections() or any(sec not in config.sections() for sec in DMAConstants.LEVEL_1_SECTIONS)) \
             and parser.old_confs:
             errors.append("Cannot use old confs, while ini file is empty or corrupted")
-            rc = rc or CUDE_CONSTANTS.FAIL
+            rc = rc or DMAConstants.FAIL
         # Data options verification
-        if not os.path.exists(os.path.join(CUDE_CONSTANTS.DATASET, parser.dataset)):
+        if not os.path.exists(os.path.join(DMAConstants.DATASET, parser.dataset)):
             errors.append("No such file or direcotory exists for dataset: {}".format(os.path.join( \
-                                                            CUDE_CONSTANTS.DATASET, parser.dataset)))
-            rc = rc or CUDE_CONSTANTS.FAIL
-        preprocessors_not_exist = self.check_paths_exits(CUDE_CONSTANTS.PREPROCESSORS, parser.preprocessors)
+                                                            DMAConstants.DATASET, parser.dataset)))
+            rc = rc or DMAConstants.FAIL
+        preprocessors_not_exist = self.check_paths_exits(DMAConstants.PREPROCESSORS, parser.preprocessors)
         if preprocessors_not_exist:
             errors.append("The following preprocessors does not exists: {}".format("\n".join(preprocessors_not_exist)))
-            rc = rc or CUDE_CONSTANTS.FAIL
-        disruptors_not_exist = self.check_paths_exits(CUDE_CONSTANTS.DISRUPTORS, parser.disruptors)
+            rc = rc or DMAConstants.FAIL
+        disruptors_not_exist = self.check_paths_exits(DMAConstants.DISRUPTORS, parser.disruptors)
         if disruptors_not_exist:
             errors.append("The following preprocessors does not exists: {}".format("\n".join(disruptors_not_exist)))
-            rc = rc or CUDE_CONSTANTS.FAIL
+            rc = rc or DMAConstants.FAIL
         try:
             x = float(parser.data_split)
         except Exception as exp:
             errors.append("Failed to parse the data split rate: {}, exception: {}".format(parser.data_split), str(exp))
-            rc = rc or CUDE_CONSTANTS.FAIL
+            rc = rc or DMAConstants.FAIL
         # Decision making options verification
-        actions_not_exist = self.check_paths_exits(CUDE_CONSTANTS.ACTIONS, parser.actions)
+        actions_not_exist = self.check_paths_exits(DMAConstants.ACTIONS, parser.actions)
         if actions_not_exist:
             errors.append("The following actions does not exists: {}".format("\n".join(actions_not_exist)))
-            rc = rc or CUDE_CONSTANTS.FAIL
-        mechanisms_not_exist = self.check_paths_exits(CUDE_CONSTANTS.MECHANISMS, parser.mechanisms)
+            rc = rc or DMAConstants.FAIL
+        mechanisms_not_exist = self.check_paths_exits(DMAConstants.MECHANISMS, parser.mechanisms)
         if mechanisms_not_exist:
             errors.append("The following mechanisms does not exists: {}".format("\n".join(mechanisms_not_exist)))
-            rc = rc or CUDE_CONSTANTS.FAIL
-        if not os.path.exists(os.path.join(CUDE_CONSTANTS.PERFORMANCE_MEASUREMENTS, parser.per_measurement)):
+            rc = rc or DMAConstants.FAIL
+        if not os.path.exists(os.path.join(DMAConstants.PERFORMANCE_MEASUREMENTS, parser.per_measurement)):
             errors.append("The following performance measure does not exists: {}".format(os.path.join( \
-                                                    CUDE_CONSTANTS.PERFORMANCE_MEASUREMENTS,  parser.per_measurement)))
-            rc = rc or CUDE_CONSTANTS.FAIL
+                                                    DMAConstants.PERFORMANCE_MEASUREMENTS,  parser.per_measurement)))
+            rc = rc or DMAConstants.FAIL
         # Results options verification
-        if not os.path.exists(os.path.join(CUDE_CONSTANTS.RESULTS, parser.dump)):
-            errors.append("The following dump folder does not exists: {}".format(os.path.join(CUDE_CONSTANTS.RESULTS, \
+        if not os.path.exists(os.path.join(DMAConstants.RESULTS, parser.dump)):
+            errors.append("The following dump folder does not exists: {}".format(os.path.join(DMAConstants.RESULTS, \
                                                                                               parser.dump)))
-            rc = rc or CUDE_CONSTANTS.FAIL
+            rc = rc or DMAConstants.FAIL
         if rc:
             logging.error("Error(s) during parsing the command arguments: {}".format("\n".join(errors)))
             parser.print_help()
@@ -169,9 +169,9 @@ class ConfsGen:
         This method prepares the default section
         """
         default_sec = {}
-        default_sec['home.path'] = CUDE_CONSTANTS.HOME
-        default_sec['src.path'] = CUDE_CONSTANTS.SRC
-        config[CUDE_CONSTANTS.DEFAULT_SEC] = default_sec
+        default_sec['home.path'] = DMAConstants.HOME
+        default_sec['src.path'] = DMAConstants.SRC
+        config[DMAConstants.DEFAULT_SEC] = default_sec
         return config
 
     def prepare_data_section(self, parser, config):
@@ -179,20 +179,20 @@ class ConfsGen:
         This method prepares the data section
         """
         data_sec = {}
-        if parser.old_confs and CUDE_CONSTANTS.DATA_SEC in config:
-            data_sec = config[CUDE_CONSTANTS.DATA_SEC]
+        if parser.old_confs and DMAConstants.DATA_SEC in config:
+            data_sec = config[DMAConstants.DATA_SEC]
         else:
-            data_sec['data.dataset.input.path'] = os.path.join(CUDE_CONSTANTS.DATASET, parser.dataset)
+            data_sec['data.dataset.input.path'] = os.path.join(DMAConstants.DATASET, parser.dataset)
             data_sec['data.preprocessing.preprocessor.list'] = parser.preprocessors
             data_sec['data.preprocessing.disruptors.list'] = parser.disruptors
             data_sec['data.data_split'] = parser.data_split
             data_sec['data.random'] = parser.data_random_selection
-        data_sec['data.path'] = CUDE_CONSTANTS.DATA
-        data_sec['data.dataset.path'] = CUDE_CONSTANTS.DATASET
-        data_sec['data.preprocessing.path'] = CUDE_CONSTANTS.PREPROCESSING
-        data_sec['data.preprocessing.preprocessor.path'] = CUDE_CONSTANTS.PREPROCESSORS
-        data_sec['data.preprocessing.disruptors.path'] = CUDE_CONSTANTS.DISRUPTORS
-        config[CUDE_CONSTANTS.DATA_SEC] = data_sec
+        data_sec['data.path'] = DMAConstants.DATA
+        data_sec['data.dataset.path'] = DMAConstants.DATASET
+        data_sec['data.preprocessing.path'] = DMAConstants.PREPROCESSING
+        data_sec['data.preprocessing.preprocessor.path'] = DMAConstants.PREPROCESSORS
+        data_sec['data.preprocessing.disruptors.path'] = DMAConstants.DISRUPTORS
+        config[DMAConstants.DATA_SEC] = data_sec
         return config
 
     def prepare_decision_making_section(self, parser, config):
@@ -200,17 +200,17 @@ class ConfsGen:
         This method prepares the decision making section
         """
         decition_making_sec = {}
-        if parser.old_confs and CUDE_CONSTANTS.DECISION_MAKING_SEC in config:
-            decition_making_sec = config[CUDE_CONSTANTS.DECISION_MAKING_SEC]
+        if parser.old_confs and DMAConstants.DECISION_MAKING_SEC in config:
+            decition_making_sec = config[DMAConstants.DECISION_MAKING_SEC]
         else:
             decition_making_sec['decision_making.actions.list'] = parser.actions
             decition_making_sec['decision_making.mechanisms.list'] = parser.mechanisms
             decition_making_sec['decision_making.performance_measurements.pkj'] = parser.per_measurement
-        decition_making_sec['decision_making.path'] = CUDE_CONSTANTS.DECISION_MAKING
-        decition_making_sec['decision_making.actions.path'] = CUDE_CONSTANTS.ACTIONS
-        decition_making_sec['decision_making.mechanisms.path'] = CUDE_CONSTANTS.MECHANISMS
-        decition_making_sec['decision_making.performance_measurements.path'] = CUDE_CONSTANTS.PERFORMANCE_MEASUREMENTS
-        config[CUDE_CONSTANTS.DECISION_MAKING_SEC] = decition_making_sec
+        decition_making_sec['decision_making.path'] = DMAConstants.DECISION_MAKING
+        decition_making_sec['decision_making.actions.path'] = DMAConstants.ACTIONS
+        decition_making_sec['decision_making.mechanisms.path'] = DMAConstants.MECHANISMS
+        decition_making_sec['decision_making.performance_measurements.path'] = DMAConstants.PERFORMANCE_MEASUREMENTS
+        config[DMAConstants.DECISION_MAKING_SEC] = decition_making_sec
         return config
 
     def prepare_results_section(self, parser, config):
@@ -218,12 +218,12 @@ class ConfsGen:
         This method prepares the results section
         """
         results_sec = {}
-        if parser.old_confs and CUDE_CONSTANTS.RESULTS_SEC in config:
-            results_sec = config[CUDE_CONSTANTS.RESULTS_SEC]
+        if parser.old_confs and DMAConstants.RESULTS_SEC in config:
+            results_sec = config[DMAConstants.RESULTS_SEC]
         else:
-            results_sec['results.dumps.path'] = os.path.join(CUDE_CONSTANTS.RESULTS, parser.dump)
-        results_sec['results.path'] = CUDE_CONSTANTS.DECISION_MAKING
-        config[CUDE_CONSTANTS.RESULTS_SEC] = results_sec
+            results_sec['results.dumps.path'] = os.path.join(DMAConstants.RESULTS, parser.dump)
+        results_sec['results.path'] = DMAConstants.DECISION_MAKING
+        config[DMAConstants.RESULTS_SEC] = results_sec
         return config
 
     def write_inis_to_file(self, ini_file, config):

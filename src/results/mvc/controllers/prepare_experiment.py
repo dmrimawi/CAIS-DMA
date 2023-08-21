@@ -19,7 +19,7 @@ import configparser
 ####################
 #   Local Imports  #
 ####################
-from utils import CUDE_CONSTANTS
+from src.utils import DMAConstants
 from data.data_feeder import DataFeeder
 
 ################
@@ -47,13 +47,13 @@ class ExperimentDesign():
         """
         Returns the dataset path as in the ini file
         """
-        return configs[CUDE_CONSTANTS.DATA_SEC][CUDE_CONSTANTS.DATA_DATASET_PATH_INI]
+        return configs[DMAConstants.DATA_SEC][DMAConstants.DATA_DATASET_PATH_INI]
 
     def get_experiment_id_dir(self, configs):
         """
         Create the name of the experiment, and its directory
         """
-        dumps_dir = configs[CUDE_CONSTANTS.RESULTS_SEC][CUDE_CONSTANTS.RESULTS_DUMPS_PATH_INI]
+        dumps_dir = configs[DMAConstants.RESULTS_SEC][DMAConstants.RESULTS_DUMPS_PATH_INI]
         dataset_name = os.path.basename(self.get_dataset_path(configs))
         experiments_root = os.path.join(dumps_dir, dataset_name)
         if not os.path.exists(experiments_root):
@@ -71,7 +71,7 @@ class ExperimentDesign():
         """
         This method extracts the split rate from the configs file
         """
-        return configs[CUDE_CONSTANTS.DATA_SEC][CUDE_CONSTANTS.SPLIT_DATA_VALUE_INI]
+        return configs[DMAConstants.DATA_SEC][DMAConstants.SPLIT_DATA_VALUE_INI]
 
     def run(self):
         """
@@ -83,7 +83,7 @@ class ExperimentDesign():
         random: read data randomly
         """
         config = configparser.ConfigParser()
-        config.read(CUDE_CONSTANTS.INI_FILE_PATH)
+        config.read(DMAConstants.INI_FILE_PATH)
         dataset = self.get_dataset_path(config)
         name, output_dir = self.get_experiment_id_dir(config)
         split_rate = self.get_the_split_rate(config)

@@ -19,8 +19,8 @@ import os
 #   Local Imports  #
 ####################
 from data.preprocessing.preprocssors.preprocessors_factory import PreprocessorsFactory
-from utils.CUDE_Logger import logging
-from utils.CUDE_Common import Common
+from src.utils.DMALogger import logging
+from src.utils.DMACommon import Common
 
 ################
 #   CONSTANTS  #

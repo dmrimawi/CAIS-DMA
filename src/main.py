@@ -19,7 +19,7 @@ import sys
 #   Local Imports  #
 ####################
 from results.mvc.controllers.prepare_experiment import ExperimentDesign
-from utils.CUDE_Logger import logging
+from src.utils.DMALogger import logging
 
 ################
 #   CONSTANTS  #

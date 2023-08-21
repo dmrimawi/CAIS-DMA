@@ -19,7 +19,7 @@ import shutil
 ####################
 #   Local Imports  #
 ####################
-from utils.Exceptions.CUDEEXCEPTION import CUDEException
+from src.utils.Exceptions.DMAException import DMAException
 
 ################
 #   CONSTANTS  #
@@ -59,4 +59,4 @@ class Common():
         if Common.check_if_file_dir_exists(src):
             shutil.copytree(src, dest)
         else:
-            raise CUDEException("Either: {}, or {} not exist".format(src, dest))
+            raise DMAException("Either: {}, or {} not exist".format(src, dest))
