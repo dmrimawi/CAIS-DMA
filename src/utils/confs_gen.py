@@ -22,8 +22,8 @@ import argparse
 ####################
 #   Local Imports  #
 ####################
-from src.utils import DMAConstants
-from src.utils.DMALogger import logging
+import DMAConstants
+from DMALogger import logging
 
 ################
 #   CONSTANTS  #
@@ -182,16 +182,16 @@ class ConfsGen:
         if parser.old_confs and DMAConstants.DATA_SEC in config:
             data_sec = config[DMAConstants.DATA_SEC]
         else:
-            data_sec['data.dataset.input.path'] = os.path.join(DMAConstants.DATASET, parser.dataset)
-            data_sec['data.preprocessing.preprocessor.list'] = parser.preprocessors
-            data_sec['data.preprocessing.disruptors.list'] = parser.disruptors
-            data_sec['data.data_split'] = parser.data_split
-            data_sec['data.random'] = parser.data_random_selection
-        data_sec['data.path'] = DMAConstants.DATA
-        data_sec['data.dataset.path'] = DMAConstants.DATASET
-        data_sec['data.preprocessing.path'] = DMAConstants.PREPROCESSING
-        data_sec['data.preprocessing.preprocessor.path'] = DMAConstants.PREPROCESSORS
-        data_sec['data.preprocessing.disruptors.path'] = DMAConstants.DISRUPTORS
+            data_sec['simulator.dataset.input.path'] = os.path.join(DMAConstants.DATASET, parser.dataset)
+            data_sec['simulator.preprocessing.preprocessor.list'] = parser.preprocessors
+            data_sec['simulator.preprocessing.disruptors.list'] = parser.disruptors
+            data_sec['simulator.data_split'] = parser.data_split
+            data_sec['simulator.random'] = parser.data_random_selection
+        data_sec['simulator.path'] = DMAConstants.DATA
+        data_sec['simulator.dataset.path'] = DMAConstants.DATASET
+        data_sec['simulator.preprocessing.path'] = DMAConstants.PREPROCESSING
+        data_sec['simulator.preprocessing.preprocessor.path'] = DMAConstants.PREPROCESSORS
+        data_sec['simulator.preprocessing.disruptors.path'] = DMAConstants.DISRUPTORS
         config[DMAConstants.DATA_SEC] = data_sec
         return config
 
@@ -203,13 +203,13 @@ class ConfsGen:
         if parser.old_confs and DMAConstants.DECISION_MAKING_SEC in config:
             decition_making_sec = config[DMAConstants.DECISION_MAKING_SEC]
         else:
-            decition_making_sec['decision_making.actions.list'] = parser.actions
-            decition_making_sec['decision_making.mechanisms.list'] = parser.mechanisms
-            decition_making_sec['decision_making.performance_measurements.pkj'] = parser.per_measurement
-        decition_making_sec['decision_making.path'] = DMAConstants.DECISION_MAKING
-        decition_making_sec['decision_making.actions.path'] = DMAConstants.ACTIONS
-        decition_making_sec['decision_making.mechanisms.path'] = DMAConstants.MECHANISMS
-        decition_making_sec['decision_making.performance_measurements.path'] = DMAConstants.PERFORMANCE_MEASUREMENTS
+            decition_making_sec['actuator.actions.list'] = parser.actions
+            decition_making_sec['actuator.mechanisms.list'] = parser.mechanisms
+            decition_making_sec['actuator.performance_measurements.pkj'] = parser.per_measurement
+        decition_making_sec['actuator.path'] = DMAConstants.DECISION_MAKING
+        decition_making_sec['actuator.actions.path'] = DMAConstants.ACTIONS
+        decition_making_sec['actuator.mechanisms.path'] = DMAConstants.MECHANISMS
+        decition_making_sec['actuator.performance_measurements.path'] = DMAConstants.PERFORMANCE_MEASUREMENTS
         config[DMAConstants.DECISION_MAKING_SEC] = decition_making_sec
         return config
 
@@ -221,8 +221,8 @@ class ConfsGen:
         if parser.old_confs and DMAConstants.RESULTS_SEC in config:
             results_sec = config[DMAConstants.RESULTS_SEC]
         else:
-            results_sec['results.dumps.path'] = os.path.join(DMAConstants.RESULTS, parser.dump)
-        results_sec['results.path'] = DMAConstants.DECISION_MAKING
+            results_sec['monitoring.dumps.path'] = os.path.join(DMAConstants.RESULTS, parser.dump)
+        results_sec['monitoring.path'] = DMAConstants.DECISION_MAKING
         config[DMAConstants.RESULTS_SEC] = results_sec
         return config
 

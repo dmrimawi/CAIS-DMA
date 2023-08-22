@@ -18,7 +18,7 @@ import os
 ####################
 #   Local Imports  #
 ####################
-from src.simulator.preprocessing.factory import Factory
+from simulator.preprocessing.factory import Factory
 
 ################
 #   CONSTANTS  #

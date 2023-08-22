@@ -19,8 +19,8 @@ import configparser
 ####################
 #   Local Imports  #
 ####################
-from src.utils import DMAConstants
-from src.simulator.data_feeder import DataFeeder
+from utils import DMAConstants
+from simulator.data_feeder import DataFeeder
 
 ################
 #   CONSTANTS  #

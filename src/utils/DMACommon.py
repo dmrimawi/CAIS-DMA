@@ -19,7 +19,7 @@ import shutil
 ####################
 #   Local Imports  #
 ####################
-from src.utils.Exceptions.DMAException import DMAException
+from utils.Exceptions.DMAException import DMAException
 
 ################
 #   CONSTANTS  #

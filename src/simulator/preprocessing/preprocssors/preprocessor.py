@@ -22,7 +22,7 @@ from abc import ABC, abstractmethod
 ####################
 #   Local Imports  #
 ####################
-from src.utils.DMALogger import logging
+from utils.DMALogger import logging
 
 ################
 #   CONSTANTS  #

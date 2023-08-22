@@ -18,8 +18,8 @@ import sys
 ####################
 #   Local Imports  #
 ####################
-from src.monitoring.mvc.controllers.prepare_experiment import ExperimentDesign
-from src.utils.DMALogger import logging
+from monitoring.mvc.controllers.prepare_experiment import ExperimentDesign
+from utils.DMALogger import logging
 
 ################
 #   CONSTANTS  #
