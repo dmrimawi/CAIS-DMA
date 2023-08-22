@@ -38,7 +38,7 @@ class PreprocessorsFactory(Factory):
         obj = None
         if class_name in COLOR_CLASSIFICATION_PREPROCESSORS:
             if class_name == "blur":
-                from data.preprocessing.preprocssors.color_classification.blur import Blur
+                from simulator.preprocessing.preprocssors.color_classification.blur import Blur
                 obj = Blur(self.name, self.desc, self.dataset_path, self.output_path)
         return obj
 

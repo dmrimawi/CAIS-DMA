@@ -54,6 +54,8 @@ class ExperimentDesign():
         Create the name of the experiment, and its directory
         """
         dumps_dir = configs[DMAConstants.RESULTS_SEC][DMAConstants.RESULTS_DUMPS_PATH_INI]
+        if not os.path.exists(dumps_dir):
+            os.mkdir(dumps_dir)
         dataset_name = os.path.basename(self.get_dataset_path(configs))
         experiments_root = os.path.join(dumps_dir, dataset_name)
         if not os.path.exists(experiments_root):

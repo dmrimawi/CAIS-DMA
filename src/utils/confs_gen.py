@@ -5,6 +5,8 @@
 # Email: dmrimawi@gmail.com + drimawi@unibz.it
 # This command line script aims to prepare the confs.ini file, the preperation can be from scratch
 # or by saving old confs
+# Note that this is a stand alone script, and not part of the framework. Thus, the local imports
+# are from the current directory since it is expected to run from its directory.
 
 #####################
 #   Native Imports  #
@@ -182,16 +184,16 @@ class ConfsGen:
         if parser.old_confs and DMAConstants.DATA_SEC in config:
             data_sec = config[DMAConstants.DATA_SEC]
         else:
-            data_sec['simulator.dataset.input.path'] = os.path.join(DMAConstants.DATASET, parser.dataset)
-            data_sec['simulator.preprocessing.preprocessor.list'] = parser.preprocessors
-            data_sec['simulator.preprocessing.disruptors.list'] = parser.disruptors
-            data_sec['simulator.data_split'] = parser.data_split
-            data_sec['simulator.random'] = parser.data_random_selection
-        data_sec['simulator.path'] = DMAConstants.DATA
-        data_sec['simulator.dataset.path'] = DMAConstants.DATASET
-        data_sec['simulator.preprocessing.path'] = DMAConstants.PREPROCESSING
-        data_sec['simulator.preprocessing.preprocessor.path'] = DMAConstants.PREPROCESSORS
-        data_sec['simulator.preprocessing.disruptors.path'] = DMAConstants.DISRUPTORS
+            data_sec[DMAConstants.DATA_DATASET_PATH_INI] = os.path.join(DMAConstants.DATASET, parser.dataset)
+            data_sec[DMAConstants.PREPROCESSORS_LIST_INI] = parser.preprocessors
+            data_sec[DMAConstants.DISRUPTORS_LIST_INI] = parser.disruptors
+            data_sec[DMAConstants.SPLIT_DATA_VALUE_INI] = parser.data_split
+            data_sec[DMAConstants.DATASET_FEED_RANDOM_INI] = parser.data_random_selection
+        data_sec[DMAConstants.DATA_PATH_INI] = DMAConstants.DATA
+        data_sec[DMAConstants.DATA_ALL_DATASETS_PATH_INI] = DMAConstants.DATASET
+        data_sec[DMAConstants.DATA_PREPROCESSING_PATH_INI] = DMAConstants.PREPROCESSING
+        data_sec[DMAConstants.DATA_PREPROCESSORS_PATH_INI] = DMAConstants.PREPROCESSORS
+        data_sec[DMAConstants.DATA_DISRUPTORS_PATH_INI] = DMAConstants.DISRUPTORS
         config[DMAConstants.DATA_SEC] = data_sec
         return config
 

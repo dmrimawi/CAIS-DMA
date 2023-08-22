@@ -26,8 +26,16 @@ DUMPS = os.path.join(RESULTS , "dump")
 # INI CONFS
 INI_FILE_PATH = os.path.join(SRC, "utils", "confs.ini")
 LEVEL_1_SECTIONS = [DEFAULT_SEC, DATA_SEC, DECISION_MAKING_SEC, RESULTS_SEC]
-DATA_DATASET_PATH_INI = "data.dataset.input.path"
-RESULTS_DUMPS_PATH_INI = "results.dumps.path"
-SPLIT_DATA_VALUE_INI = "data.data_split"
+DATA_DATASET_PATH_INI = "simulator.dataset.input.path"
+PREPROCESSORS_LIST_INI = 'simulator.preprocessing.preprocessor.list'
+DISRUPTORS_LIST_INI = 'simulator.preprocessing.disruptors.list'
+DATASET_FEED_RANDOM_INI = 'simulator.random'
+DATA_PATH_INI = 'simulator.path'
+DATA_ALL_DATASETS_PATH_INI = 'simulator.dataset.path'
+DATA_PREPROCESSING_PATH_INI = 'simulator.preprocessing.path'
+DATA_PREPROCESSORS_PATH_INI = 'simulator.preprocessing.preprocessor.path'
+DATA_DISRUPTORS_PATH_INI = 'simulator.preprocessing.disruptors.path'
+RESULTS_DUMPS_PATH_INI = "monitoring.dumps.path"
+SPLIT_DATA_VALUE_INI = 'simulator.data_split'
 
 
