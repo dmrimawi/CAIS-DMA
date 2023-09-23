@@ -18,12 +18,20 @@ __Status__ : In Progress
 To use CAIS-DMA, please reference at least one of the following papers:
 
 ```
+Title = CAIS-DMA: A Decision-Making Assistant for Collaborative AI Systems
+Venue = The International Conference on Product-Focused Software Process Improvement (PROFES) 
+Publisher = Springer
+Author = Rimawi, Diaeddin and Liotta, Antonio and Todescato, Marco and Russo, Barbara
+Year = 2023
+Status = Accepted
+```
+```
 Title = GResilience: Trading off between the Greenness and the Resilience of Collaborative AI Systems
 Venue = IFIP-ICTSS 35th International Conference on Testing Software and Systems
 Publisher = Springer
 Author = Rimawi, Diaeddin and Liotta, Antonio and Todescato, Marco and Russo, Barbara
 Year = 2023
-Status = Accepted
+Status = Published
 ```
 ```
 Title = Green Resilience of Cyber-Physical Systems
