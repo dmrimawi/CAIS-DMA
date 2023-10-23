@@ -26,7 +26,7 @@ from utils.DMALogger import logging
 ################
 #   CONSTANTS  #
 ################
-DEBUG = False
+DEBUG = True
 
 class Main():
     def __init__(self, sorting_type) -> None:
@@ -45,7 +45,7 @@ try:
     rc = exp_des.main()
     sys.exit(rc)
 except Exception as exp:
-    if DEBUG:
+    if not DEBUG:
         logging.error("Failed due to: {}".format(str(exp)))
         sys.exit(1)
     else:
