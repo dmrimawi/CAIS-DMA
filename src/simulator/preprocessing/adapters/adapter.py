@@ -19,7 +19,7 @@
 ####################
 #   Local Imports  #
 ####################
-from simulator.preprocessing.preprocssors.color_classification.color_classification_adapter import ColorClassificationAdapter
+from simulator.preprocessing.adapters.color_classification.color_classification_adapter import ColorClassificationAdapter
 
 ################
 #   CONSTANTS  #

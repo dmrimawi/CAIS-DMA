@@ -66,8 +66,8 @@ class ConfsGen:
         data_options.add_argument('--dataset', dest='dataset', default='color_classification',
                             help='Dataset folder name')
         # Preprocessing configs
-        data_options.add_argument('-p', '--preprocessors', nargs='*', dest='preprocessors', default=[],
-                            help='Preprocessors python files names list (in order)')
+        data_options.add_argument('-p', '--adapters', nargs='*', dest='adapters', default=[],
+                            help='Adapters python files names list (in order)')
         data_options.add_argument('-d', '--disruptors', nargs='*', dest='disruptors', default=[],
                             help='Disruptors python files names list (in order)')
         data_options.add_argument('-s', '--data-split', dest='data_split', default=33,
@@ -120,13 +120,13 @@ class ConfsGen:
             errors.append("No such file or direcotory exists for dataset: {}".format(os.path.join( \
                                                             DMAConstants.DATASET, parser.dataset)))
             rc = rc or DMAConstants.FAIL
-        preprocessors_not_exist = self.check_paths_exits(DMAConstants.PREPROCESSORS, parser.preprocessors)
-        if preprocessors_not_exist:
-            errors.append("The following preprocessors does not exists: {}".format("\n".join(preprocessors_not_exist)))
+        adapters_not_exist = self.check_paths_exits(DMAConstants.ADAPTERS, parser.adapters)
+        if adapters_not_exist:
+            errors.append("The following adapters does not exists: {}".format("\n".join(adapters_not_exist)))
             rc = rc or DMAConstants.FAIL
         disruptors_not_exist = self.check_paths_exits(DMAConstants.DISRUPTORS, parser.disruptors)
         if disruptors_not_exist:
-            errors.append("The following preprocessors does not exists: {}".format("\n".join(disruptors_not_exist)))
+            errors.append("The following adapters does not exists: {}".format("\n".join(disruptors_not_exist)))
             rc = rc or DMAConstants.FAIL
         try:
             x = float(parser.data_split)
@@ -185,14 +185,14 @@ class ConfsGen:
             data_sec = config[DMAConstants.DATA_SEC]
         else:
             data_sec[DMAConstants.DATA_DATASET_PATH_INI] = os.path.join(DMAConstants.DATASET, parser.dataset)
-            data_sec[DMAConstants.PREPROCESSORS_LIST_INI] = parser.preprocessors
+            data_sec[DMAConstants.ADAPTERS_LIST_INI] = parser.adapters
             data_sec[DMAConstants.DISRUPTORS_LIST_INI] = parser.disruptors
             data_sec[DMAConstants.SPLIT_DATA_VALUE_INI] = parser.data_split
             data_sec[DMAConstants.DATASET_FEED_RANDOM_INI] = parser.data_random_selection
         data_sec[DMAConstants.DATA_PATH_INI] = DMAConstants.DATA
         data_sec[DMAConstants.DATA_ALL_DATASETS_PATH_INI] = DMAConstants.DATASET
         data_sec[DMAConstants.DATA_PREPROCESSING_PATH_INI] = DMAConstants.PREPROCESSING
-        data_sec[DMAConstants.DATA_PREPROCESSORS_PATH_INI] = DMAConstants.PREPROCESSORS
+        data_sec[DMAConstants.DATA_ADAPTERS_PATH_INI] = DMAConstants.ADAPTERS
         data_sec[DMAConstants.DATA_DISRUPTORS_PATH_INI] = DMAConstants.DISRUPTORS
         config[DMAConstants.DATA_SEC] = data_sec
         return config

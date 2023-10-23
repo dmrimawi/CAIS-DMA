@@ -3,11 +3,11 @@
 #       Class Desciption
 # Author: Diaeddin Rimawi
 # Email: dmrimawi@gmail.com + drimawi@unibz.it
-# This is an abstract class that defines the methods of any preprocessor in the framework
-# Preprocessors are classes that performs filters, normalizations, and other data preperation
+# This is an abstract class that defines the methods of any Disruptor in the framework
+# Disruptors are classes that performs filters, normalizations, and other data preperation
 # before being fed to the next step (disruptors)
 # IMPORTANT NOTE:
-# Please note that all preprocessors should be inside a directory that has the same name as the dataset
+# Please note that all Disruptors should be inside a directory that has the same name as the dataset
 
 #####################
 #   Native Imports  #
@@ -29,14 +29,14 @@ from utils.DMALogger import logging
 ################
 
 
-class Preprocessor(ABC):
+class Disruptor(ABC):
 
     @abstractmethod
     def __init__(self, name: str, desc: str, dataset_path: str, output_path: str) -> None:
         """
-        The Preprocessor constructors, should pass:
+        The Disruptor constructors, should pass:
         name: the experiment name
-        desc: the Preprocessor desciption, e.g. the fade Preprocessor generate a faded version of the image
+        desc: the Disruptor desciption, e.g. the fade Disruptor generate a faded version of the image
         dataset_path: is a path to the dataset folder (absulute paths)
         """
         super().__init__()
@@ -44,7 +44,7 @@ class Preprocessor(ABC):
         self.desc = desc
         self.dataset_path = dataset_path
         self.output_path = output_path
-        logging.info("Running Preprocessor for: {}".format(self.name))
+        logging.info("Running Disruptor for: {}".format(self.name))
         logging.info("Desciption: {}".format(self.desc))
         logging.info("Dataset: {}".format(self.dataset_path))
         logging.info("Output: {}".format(self.output_path))
@@ -59,7 +59,7 @@ class Preprocessor(ABC):
     @abstractmethod
     def apply(self):
         """
-        Calls the private methods for the Preprocessor, which updates the raw data with this preprocessor filters
+        Calls the private methods for the Disruptor, which updates the raw data with this Disruptor filters
         """
         pass
 
@@ -70,7 +70,7 @@ class Preprocessor(ABC):
         {
             0: {
                 orignal: pointer to the original data row,
-                updated: the new raw data after apply the Preprocessor,
+                updated: the new raw data after apply the Disruptor,
             },
         }
         """

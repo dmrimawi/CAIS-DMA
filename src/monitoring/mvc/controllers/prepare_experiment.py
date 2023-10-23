@@ -75,6 +75,18 @@ class ExperimentDesign():
         """
         return configs[DMAConstants.DATA_SEC][DMAConstants.SPLIT_DATA_VALUE_INI]
 
+    def get_adapters_list(self, configs):
+        """
+        This method extracts the preorpcessors list from the configs file
+        """
+        return eval(configs[DMAConstants.DATA_SEC][DMAConstants.ADAPTERS_LIST_INI])
+
+    def get_disruptors_list(self, configs):
+        """
+        This method extracts the disruptors list from the configs file
+        """
+        return eval(configs[DMAConstants.DATA_SEC][DMAConstants.DISRUPTORS_LIST_INI])
+
     def run(self):
         """
         This memthod runs the experiment
@@ -89,8 +101,10 @@ class ExperimentDesign():
         dataset = self.get_dataset_path(config)
         name, output_dir = self.get_experiment_id_dir(config)
         split_rate = self.get_the_split_rate(config)
+        adapters = self.get_adapters_list(config)
+        disruptors = self.get_disruptors_list(config)
         if self.sorting_type == NORMAL_SORT:
-            data_feeder = DataFeeder(name, dataset, output_dir, split_rate, preprocessors=["blur"], disruptors=[])
+            data_feeder = DataFeeder(name, dataset, output_dir, split_rate, adapters=adapters, disruptors=disruptors)
             data_feeder.run()
         return 0
 

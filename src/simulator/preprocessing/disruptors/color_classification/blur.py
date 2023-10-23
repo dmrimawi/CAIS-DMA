@@ -3,7 +3,7 @@
 #       Class Desciption
 # Author: Diaeddin Rimawi
 # Email: dmrimawi@gmail.com + drimawi@unibz.it
-# This is a preprocessor class that takes a dataset of images and blur them
+# This is a Disruptor class that takes a dataset of images and blur them
 
 #####################
 #   Native Imports  #
@@ -18,7 +18,7 @@ import cv2 as cv
 ####################
 #   Local Imports  #
 ####################
-from simulator.preprocessing.preprocssors.preprocessor import Preprocessor
+from simulator.preprocessing.disruptors.disruptors import Disruptor
 from utils.Exceptions.DMAException import DMAException
 from utils.DMACommon import Common
 
@@ -27,19 +27,19 @@ from utils.DMACommon import Common
 ################
 
 
-class Blur(Preprocessor):
+class Blur(Disruptor):
     def __init__(self, name: str, desc: str, dataset_path: str, output_path: str, ratio=(5, 5)) -> None:
         """
-        This preprocessor blur images to a specific ratio, where ratio in [0, 1]
+        This Disruptor blur images to a specific ratio, where ratio in [0, 1]
         """
         if not type(ratio) == tuple:
-            raise DMAException("In Preprocessor {}, ratio value {}, while it should be tuple of two integers".format(
+            raise DMAException("In Disruptor {}, ratio value {}, while it should be tuple of two integers".format(
                 self.name, ratio
             ))
         self.ratio = ratio
         if desc == '' or desc is None:
             self.desc = """
-                            This preprocessor is blur the images to a specific ratio = {}
+                            This Disruptor is blur the images to a specific ratio = {}
                             It reads images and dumps images as well
                         """.format(self.ratio)
         super().__init__(name, desc, dataset_path, output_path)

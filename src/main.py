@@ -9,6 +9,8 @@
 #   Native Imports  #
 #####################
 import sys
+import traceback
+
 
 ######################
 #   Modules Imports  #
@@ -24,7 +26,7 @@ from utils.DMALogger import logging
 ################
 #   CONSTANTS  #
 ################
-
+DEBUG = False
 
 class Main():
     def __init__(self, sorting_type) -> None:
@@ -43,5 +45,9 @@ try:
     rc = exp_des.main()
     sys.exit(rc)
 except Exception as exp:
-    logging.error("Failed due to: {}".format(str(exp)))
-    sys.exit(1)
+    if DEBUG:
+        logging.error("Failed due to: {}".format(str(exp)))
+        sys.exit(1)
+    else:
+        logging.error(traceback.format_exc())
+        sys.exit(1)

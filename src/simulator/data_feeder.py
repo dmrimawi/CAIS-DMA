@@ -18,7 +18,7 @@ import os
 ####################
 #   Local Imports  #
 ####################
-from simulator.preprocessing.preprocssors.preprocessors_factory import PreprocessorsFactory
+from simulator.preprocessing.disruptors.disruptors_factory import DisruptorsFactory
 from utils.DMALogger import logging
 from utils.DMACommon import Common
 
@@ -29,7 +29,7 @@ from utils.DMACommon import Common
 
 class DataFeeder():
     def __init__(self, name: str, dataset_path: str, output_path: str, \
-                 split_rate, preprocessors=[], disruptors=[]):
+                 split_rate, adapters=[], disruptors=[]):
         """
         Data Feeder Constructor
         """
@@ -38,34 +38,34 @@ class DataFeeder():
         self.dataset_path = dataset_path
         self.output_path = output_path
         self.split_rate = split_rate
-        self.preprocessors = preprocessors
+        self.adapters = adapters
         self.disruptors = disruptors
 
     def __apply(self, obj):
         """
-        Call the preprocessors, disruptors methods
+        Call the disruptors methods
         """
         obj.fetch_dataset()
         obj.apply()
         obj.dump()
 
-    def __preprocessors(self):
-        """
-        This method responsible to apply the data changes from the selected preprocessors
-        """
-        logging.info("Running Preprocessors: {}".format(self.preprocessors))
-        pre_factory = PreprocessorsFactory(self.preprocessors, self.name, self.desc, self.dataset_path, \
-                                           self.output_path)
-        while pre_factory.has_next():
-            pre_obj = pre_factory.next()
-            self.__apply(pre_obj)
-
     def __disruptors(self):
         """
-        This method responsible to apply the data changes from the selected preprocessors
+        This method responsible to apply the data changes from the selected disruptors
         """
-        logging.info("Running Disruptors: {}".format(self.disruptors))
-        dis_factory = None # TODO: Create a disruptors factory object
+        logging.info("Running disruptors: {}".format(self.disruptors))
+        dis_factory = DisruptorsFactory(self.disruptors, self.name, self.desc, self.dataset_path, \
+                                           self.output_path)
+        while dis_factory.has_next():
+            pre_obj = dis_factory.next()
+            self.__apply(pre_obj)
+
+    def __adapters(self):
+        """
+        This method responsible to convert data structure using the adapter
+        """
+        logging.info("Running Adapters: {}".format(self.disruptors))
+        adaptor_factory = None # TODO: Create a disruptors factory object
         # while dis_factory.has_next():
         #     dis_obj = dis_factory.next()
         #     self.__apply(dis_obj)
@@ -75,8 +75,6 @@ class DataFeeder():
         """
         This method perform preprocessing, and disruption over the data, and prepare it
         """
-        if len(self.preprocessors):
-            self.__preprocessors()
         if len(self.disruptors):
             self.__disruptors()
 
@@ -96,5 +94,7 @@ class DataFeeder():
         This method provides the data after being preprocessed
         """
         self.__pre_run()
+        if len(self.adapters):
+            self.__adapters()
 
 
