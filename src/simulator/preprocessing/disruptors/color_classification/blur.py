@@ -21,6 +21,7 @@ import cv2 as cv
 from simulator.preprocessing.disruptors.disruptors import Disruptor
 from utils.Exceptions.DMAException import DMAException
 from utils.DMACommon import Common
+from utils import DMAConstants
 
 ################
 #   CONSTANTS  #
@@ -46,7 +47,11 @@ class Blur(Disruptor):
     
     def fetch_dataset(self):
         # Create a list of all images in the dataset
-        self.all_dataset_imgs = Common.list_all_directory_file_with_extention(self.dataset_path, ".jpg")
+        data_frame = Common.load_files_pandas(os.path.join(self.dataset_path, DMAConstants.CSV_FILE_NAME))
+        disrupted_data = data_frame.loc[data_frame[DMAConstants.DISRUPTED_COL_TITLE] == 1]
+        self.all_dataset_imgs = list()
+        for _, data in disrupted_data.iterrows():
+            self.all_dataset_imgs.append(os.path.join(self.dataset_path, data[DMAConstants.FIELD_WITH_DATA_TITLE]))
 
     def apply(self):
         self.imgs_data = {}

@@ -73,7 +73,7 @@ class ExperimentDesign():
         """
         This method extracts the split rate from the configs file
         """
-        return configs[DMAConstants.DATA_SEC][DMAConstants.SPLIT_DATA_VALUE_INI]
+        return float(configs[DMAConstants.DATA_SEC][DMAConstants.SPLIT_DATA_VALUE_INI])
 
     def get_adapters_list(self, configs):
         """
@@ -100,11 +100,13 @@ class ExperimentDesign():
         config.read(DMAConstants.INI_FILE_PATH)
         dataset = self.get_dataset_path(config)
         name, output_dir = self.get_experiment_id_dir(config)
+        csv_file = DMAConstants.CSV_FILE_NAME
         split_rate = self.get_the_split_rate(config)
         adapters = self.get_adapters_list(config)
         disruptors = self.get_disruptors_list(config)
         if self.sorting_type == NORMAL_SORT:
-            data_feeder = DataFeeder(name, dataset, output_dir, split_rate, adapters=adapters, disruptors=disruptors)
+            data_feeder = DataFeeder(name, dataset, output_dir, csv_file, split_rate, \
+                                     adapters=adapters, disruptors=disruptors)
             data_feeder.run()
         return 0
 

@@ -13,6 +13,10 @@ DATASET = os.path.join(DATA, "dataset")
 PREPROCESSING = os.path.join(DATA , "preprocessing")
 ADAPTERS = os.path.join(PREPROCESSING , "adapters")
 DISRUPTORS = os.path.join(PREPROCESSING , "disruptors")
+CSV_FILE_NAME = "objects_colors_dataset.csv"
+CSV_COL_CLASS_TITLE = "box"
+DISRUPTED_COL_TITLE = "disrupted"
+FIELD_WITH_DATA_TITLE = "file_name"
 # DECISION_MAKING
 DECISION_MAKING_SEC = "actuator"
 DECISION_MAKING = os.path.join(SRC , DECISION_MAKING_SEC)

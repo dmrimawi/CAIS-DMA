@@ -14,7 +14,7 @@ import shutil
 ######################
 #   Modules Imports  #
 ######################
-
+import pandas as pd
 
 ####################
 #   Local Imports  #
@@ -60,3 +60,23 @@ class Common():
             shutil.copytree(src, dest)
         else:
             raise DMAException("Either: {}, or {} not exist".format(src, dest))
+
+    @staticmethod
+    def load_files_pandas(file, csv=True):
+        """
+        This methor reads files into a pandas datafram
+        TODO: Other datatypes of files (JSON, etc..)
+        """
+        df = None
+        if file.endswith("csv"):
+            df = pd.read_csv(file)
+        return df
+
+    @staticmethod
+    def save_pandas_df_to_file(df, file, csv=True):
+        """
+        This methor saves df into a files
+        TODO: Other datatypes of files (JSON, etc..)
+        """
+        if file.endswith("csv"):
+            df.to_csv(file)
