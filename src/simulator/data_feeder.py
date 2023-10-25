@@ -83,7 +83,7 @@ class DataFeeder():
             num_to_change = num
             if num > len(groups.get_group(group)):
                 num_to_change = len(groups.get_group(group))
-            for index in groups.get_group(group).head(num_to_change).index:
+            for index in groups.get_group(group).sample(n=num_to_change).index:
                 self.data_frame.at[index, DMAConstants.DISRUPTED_COL_TITLE] = 1
 
     def __pick_data_to_disrupt(self):
