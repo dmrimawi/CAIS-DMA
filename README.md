@@ -24,7 +24,7 @@ Publisher = Springer, Cham
 Authors = Rimawi, Diaeddin and Liotta, Antonio and Todescato, Marco and Russo, Barbara
 Year = 2023
 DOI = https://doi.org/10.1007/978-3-031-49266-2_13
-PrePrint = [PDF](https://arxiv.org/pdf/2311.04562.pdf)
+PrePrint = https://arxiv.org/pdf/2311.04562.pdf
 Status = Published
 ```
 ```
@@ -34,7 +34,7 @@ Publisher = Springer, Cham
 Authors = Rimawi, Diaeddin and Liotta, Antonio and Todescato, Marco and Russo, Barbara
 Year = 2023
 DOI = https://doi.org/10.1007/978-3-031-43240-8_18
-PrePrint = [PDF](https://arxiv.org/pdf/2311.04569.pdf)
+PrePrint = https://arxiv.org/pdf/2311.04569.pdf
 Status = Published
 ```
 ```
@@ -44,7 +44,7 @@ Publisher = IEEE
 Author = Rimawi, Diaeddin
 Year = 2022
 DOI = https://doi.org/10.1109/ISSREW55968.2022.00048
-PrePrint = [PDF](https://www.researchgate.net/profile/Diaeddin-Rimawi/publication/363336922_Green_Resilience_of_Cyber-Physical_Systems/links/63187b5a0a70852150d4ecd4/Green-Resilience-of-Cyber-Physical-Systems.pdf)
+PrePrint = https://arxiv.org/pdf/2311.05201.pdf
 Status = Published
 ```
 
