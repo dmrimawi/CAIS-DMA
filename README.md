@@ -14,7 +14,7 @@ __Status__ : In Progress
 
 More details about CAIS-DMA can be found in our paper [DOI](https://doi.org/10.1007/978-3-031-49266-2_13), or [PrePrint](https://arxiv.org/pdf/2311.04562.pdf).
 
-# References
+# To use CAIS-DMA 
 To use CAIS-DMA, please reference at least one of the following papers:
 
 ```
