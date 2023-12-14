@@ -12,7 +12,7 @@ __Status__ : In Progress
 
 ## About CAIS-DMA
 
-### Structure
+More details about CAIS-DMA can be found in our paper [DOI](https://doi.org/10.1007/978-3-031-49266-2_13), or [PrePrint](https://arxiv.org/pdf/2311.04562.pdf).
 
 # References
 To use CAIS-DMA, please reference at least one of the following papers:
@@ -20,17 +20,21 @@ To use CAIS-DMA, please reference at least one of the following papers:
 ```
 Title = CAIS-DMA: A Decision-Making Assistant for Collaborative AI Systems
 Venue = The International Conference on Product-Focused Software Process Improvement (PROFES) 
-Publisher = Springer
-Author = Rimawi, Diaeddin and Liotta, Antonio and Todescato, Marco and Russo, Barbara
+Publisher = Springer, Cham
+Authors = Rimawi, Diaeddin and Liotta, Antonio and Todescato, Marco and Russo, Barbara
 Year = 2023
-Status = Accepted
+DOI = https://doi.org/10.1007/978-3-031-49266-2_13
+PrePrint = [PDF](https://arxiv.org/pdf/2311.04562.pdf)
+Status = Published
 ```
 ```
 Title = GResilience: Trading off between the Greenness and the Resilience of Collaborative AI Systems
 Venue = IFIP-ICTSS 35th International Conference on Testing Software and Systems
-Publisher = Springer
-Author = Rimawi, Diaeddin and Liotta, Antonio and Todescato, Marco and Russo, Barbara
+Publisher = Springer, Cham
+Authors = Rimawi, Diaeddin and Liotta, Antonio and Todescato, Marco and Russo, Barbara
 Year = 2023
+DOI = https://doi.org/10.1007/978-3-031-43240-8_18
+PrePrint = [PDF](https://arxiv.org/pdf/2311.04569.pdf)
 Status = Published
 ```
 ```
@@ -39,6 +43,8 @@ Venue = 2022 IEEE International Symposium on Software Reliability Engineering Wo
 Publisher = IEEE
 Author = Rimawi, Diaeddin
 Year = 2022
+DOI = https://doi.org/10.1109/ISSREW55968.2022.00048
+PrePrint = [PDF](https://www.researchgate.net/profile/Diaeddin-Rimawi/publication/363336922_Green_Resilience_of_Cyber-Physical_Systems/links/63187b5a0a70852150d4ecd4/Green-Resilience-of-Cyber-Physical-Systems.pdf)
 Status = Published
 ```
 
