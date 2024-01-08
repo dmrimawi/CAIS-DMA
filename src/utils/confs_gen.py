@@ -95,7 +95,17 @@ class ConfsGen:
         not_exit = []
         for dir in dirs:
             if not os.path.exists(os.path.join(root, dir)):
-                not_exit.append(os.path.exists(os.path.join(root, dir)))
+                not_exit.append(os.path.join(root, dir))
+        return not_exit
+
+    def check_files_exits(self, root, files, ext="py"):
+        """
+        This methods loops over the given os.path.join(root, dirs**) and return non-existance directories
+        """
+        not_exit = []
+        for f in files:
+            if not os.path.exists(os.path.join(root, "{}.{}".format(f, ext))):
+                not_exit.append(os.path.join(root, "{}.{}".format(f, ext)))
         return not_exit
 
     def verify_args(self, parser):
@@ -120,11 +130,11 @@ class ConfsGen:
             errors.append("No such file or direcotory exists for dataset: {}".format(os.path.join( \
                                                             DMAConstants.DATASET, parser.dataset)))
             rc = rc or DMAConstants.FAIL
-        adapters_not_exist = self.check_paths_exits(DMAConstants.ADAPTERS, parser.adapters)
+        adapters_not_exist = self.check_files_exits(os.path.join(DMAConstants.ADAPTERS, parser.dataset), parser.adapters)
         if adapters_not_exist:
             errors.append("The following adapters does not exists: {}".format("\n".join(adapters_not_exist)))
             rc = rc or DMAConstants.FAIL
-        disruptors_not_exist = self.check_paths_exits(DMAConstants.DISRUPTORS, parser.disruptors)
+        disruptors_not_exist = self.check_files_exits(os.path.join(DMAConstants.DISRUPTORS, parser.dataset), parser.disruptors)
         if disruptors_not_exist:
             errors.append("The following adapters does not exists: {}".format("\n".join(disruptors_not_exist)))
             rc = rc or DMAConstants.FAIL

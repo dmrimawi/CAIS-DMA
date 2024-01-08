@@ -24,7 +24,7 @@ from simulator.preprocessing.factory import Factory
 #   CONSTANTS  #
 ################
 COLOR_CLASSIFICATION = "color_classification"
-COLOR_CLASSIFICATION_DISRUPTORS = ["blur"]
+COLOR_CLASSIFICATION_DISRUPTORS = ["blur", "darkness"]
 
 
 class DisruptorsFactory(Factory):
@@ -40,6 +40,9 @@ class DisruptorsFactory(Factory):
             if class_name == "blur":
                 from simulator.preprocessing.disruptors.color_classification.blur import Blur
                 obj = Blur(self.name, self.desc, self.dataset_path, self.output_path)
+            if class_name == "darkness":
+                from simulator.preprocessing.disruptors.color_classification.darkness import Dark
+                obj = Dark(self.name, self.desc, self.dataset_path, self.output_path)
         return obj
 
     def classes_factory(self, class_name):

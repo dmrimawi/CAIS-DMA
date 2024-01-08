@@ -44,5 +44,22 @@ class Adapter(ABC):
         logging.info("Output: {}".format(self.output_path))
 
     @abstractmethod
-    def request(self):
+    def fetch_dataset(self):
+        """
+        Fetch the dataset rows
+        """
+        pass
+
+    @abstractmethod
+    def apply(self):
+        """
+        The request method of the adapter
+        """
+        pass
+
+    @abstractmethod
+    def dump(self):
+        """
+        Save output
+        """
         pass

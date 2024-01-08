@@ -10,6 +10,7 @@
 #   Native Imports  #
 #####################
 import os
+import json
 
 ######################
 #   Modules Imports  #
@@ -36,20 +37,38 @@ class ColorClassificationAdapter(Adapter):
         """
         if desc == '' or desc is None:
             self.desc = """
-                            This Disruptor Adaptor convert the object passed (image)
+                            This Adaptor convert the objects (images)
                             to a JSON format as the MLClassifier expects
-                        """.format(self.ratio)
+                        """
         super().__init__(name, desc, dataset_path, output_path)
 
     def get_json_example(self):
         """
         This method creates an empty dictionary of CORAL JSON format
         """
-        
+        example_path = os.path.join(self.dataset_path, "{}.json".format(DMAConstants.ADAPTER_EXAMPLE_FILE_NAME))
+        json_example = None
+        if os.path.exists(example_path):
+            with open(example_path) as f:
+                json_example = json.load(f)
+        else:
+            raise DMAException("The example path doesn't exist: {}".format(example_path))           
+        return json_example
 
-    def request(self):
-        """
-        This method is specifc for the color classification adapter of Demo CORAL
-        """
-        
-        return None
+    def fetch_dataset(self):
+        # Create a list of all images in the dataset
+        data_frame = Common.load_files_pandas(os.path.join(self.dataset_path, DMAConstants.CSV_FILE_NAME))
+        self.all_dataset_imgs = list()
+        for _, data in data_frame.iterrows():
+            self.all_dataset_imgs.append(os.path.join(self.dataset_path, data[DMAConstants.FIELD_WITH_DATA_TITLE]))
+
+    def apply(self):
+        self.imgs_data = {}
+        for img_f in self.all_dataset_imgs:
+            f_name = os.path.basename(img_f)
+            self.imgs_data[f_name] = self.get_json_example()  # TODO: Create a specific JSON for the img
+    
+    def dump(self):
+        for name, data in self.imgs_data.items():
+            with open(os.path.join(self.output_path, "{}.json".format(name)), "w") as file:
+                json.dump(data, file)

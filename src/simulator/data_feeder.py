@@ -47,19 +47,13 @@ class DataFeeder():
         self.disruptors = disruptors
         self.data_frame = None
 
-    def __dis_apply(self, obj):
+    def __apply(self, obj):
         """
         Call the disruptors methods
         """
         obj.fetch_dataset()
         obj.apply()
         obj.dump()
-
-    def __adapt_apply(self, obj):
-        """
-        Call the disruptors methods
-        """
-        obj.request()
 
     def __disruptors(self):
         """
@@ -70,7 +64,7 @@ class DataFeeder():
                                            self.output_path)
         while dis_factory.has_next():
             pre_obj = dis_factory.next()
-            self.__dis_apply(pre_obj)
+            self.__apply(pre_obj)
 
     def __adapters(self):
         """
@@ -81,7 +75,7 @@ class DataFeeder():
                                            self.output_path)
         while adaptor_factory.has_next():
             adapt_obj = adaptor_factory.next()
-            self.__adapt_apply(adapt_obj)
+            self.__apply(adapt_obj)
 
     def __change_to_disrupted_per_group(self, groups, num):
         """
