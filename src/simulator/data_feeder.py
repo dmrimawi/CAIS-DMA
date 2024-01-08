@@ -19,10 +19,12 @@ import math
 ####################
 #   Local Imports  #
 ####################
-from simulator.preprocessing.disruptors.disruptors_factory import DisruptorsFactory
 from utils.DMALogger import logging
 from utils.DMACommon import Common
 from utils import DMAConstants
+from utils.Exceptions.DMAException import DMAException
+from simulator.preprocessing.disruptors.disruptors_factory import DisruptorsFactory
+from simulator.preprocessing.adapters.adaptors_factory import AdaptorsFactory
 
 ################
 #   CONSTANTS  #
@@ -45,13 +47,19 @@ class DataFeeder():
         self.disruptors = disruptors
         self.data_frame = None
 
-    def __apply(self, obj):
+    def __dis_apply(self, obj):
         """
         Call the disruptors methods
         """
         obj.fetch_dataset()
         obj.apply()
         obj.dump()
+
+    def __adapt_apply(self, obj):
+        """
+        Call the disruptors methods
+        """
+        obj.request()
 
     def __disruptors(self):
         """
@@ -62,19 +70,19 @@ class DataFeeder():
                                            self.output_path)
         while dis_factory.has_next():
             pre_obj = dis_factory.next()
-            self.__apply(pre_obj)
+            self.__dis_apply(pre_obj)
 
     def __adapters(self):
         """
         This method responsible to convert data structure using the adapter
         """
-        logging.info("Running Adapters: {}".format(self.disruptors))
-        adaptor_factory = None # TODO: Create a disruptors factory object
-        # while dis_factory.has_next():
-        #     dis_obj = dis_factory.next()
-        #     self.__apply(dis_obj)
-        pass
-    
+        logging.info("Running Adapters: {}".format(self.adapters))
+        adaptor_factory = AdaptorsFactory(self.adapters, self.name, self.desc, self.dataset_path, \
+                                           self.output_path)
+        while adaptor_factory.has_next():
+            adapt_obj = adaptor_factory.next()
+            self.__adapt_apply(adapt_obj)
+
     def __change_to_disrupted_per_group(self, groups, num):
         """
         This method loops over the groups and change the disrupted column from 0 to 1
@@ -128,5 +136,6 @@ class DataFeeder():
         self.__pre_run()
         if len(self.adapters):
             self.__adapters()
-
-
+        else:
+            raise DMAException("Missing adapters, Adapters are important to prepare data in the same structure \
+                               expected by the CAIS under test.")
