@@ -10,6 +10,7 @@
 #####################
 import os
 import math
+import time
 
 ######################
 #   Modules Imports  #
@@ -25,6 +26,7 @@ from utils import DMAConstants
 from utils.Exceptions.DMAException import DMAException
 from simulator.preprocessing.disruptors.disruptors_factory import DisruptorsFactory
 from simulator.preprocessing.adapters.adaptors_factory import AdaptorsFactory
+from simulator.preprocessing.streamers.zmq.zmq_pub_sub import ZeroMQHandler
 
 ################
 #   CONSTANTS  #
@@ -123,6 +125,22 @@ class DataFeeder():
         self.__pick_data_to_disrupt()
         self.__prepare_data()
 
+    def normal_stream(self):
+        """
+        Streaming data in order
+        """
+        list_of_files = Common.list_all_directory_file_with_extention(self.output_path, "json")
+        zmq_handler = ZeroMQHandler(address=DMAConstants.PUBLISH_ADDRESS)
+        publisher = zmq_handler.create_publisher(port=DMAConstants.PUBLISH_PORT)
+        for f in list_of_files:
+            if Common.check_if_file_dir_exists(f):
+                logging.info("Publishing the content of {}".format(f))
+                data = Common.read_json_file(f)
+                zmq_handler.publish_message(publisher_socket=publisher, data=data)
+                time.sleep(10)
+        publisher.close()
+        zmq_handler.context.term()
+
     def run(self):
         """
         This method provides the data after being preprocessed
@@ -133,3 +151,4 @@ class DataFeeder():
         else:
             raise DMAException("Missing adapters, Adapters are important to prepare data in the same structure \
                                expected by the CAIS under test.")
+        self.normal_stream()

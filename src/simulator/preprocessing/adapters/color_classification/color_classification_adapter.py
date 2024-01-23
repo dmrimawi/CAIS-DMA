@@ -11,11 +11,16 @@
 #####################
 import os
 import json
+import base64
+import time
+
 
 ######################
 #   Modules Imports  #
 ######################
 import cv2 as cv
+import numpy as np
+
 
 ####################
 #   Local Imports  #
@@ -55,6 +60,19 @@ class ColorClassificationAdapter(Adapter):
             raise DMAException("The example path doesn't exist: {}".format(example_path))           
         return json_example
 
+    def encode_image_to_base64(self, image):
+        """
+        Encode a NumPy image array to base64 string.
+
+        Parameters:
+        - image (numpy.ndarray): The image represented as a NumPy array.
+
+        Returns:
+        - str: The base64-encoded image string.
+        """
+        _, img_encoded = cv.imencode('.png', image)
+        return base64.b64encode(img_encoded).decode('utf-8')
+
     def fetch_dataset(self):
         # Create a list of all images in the dataset
         data_frame = Common.load_files_pandas(os.path.join(self.dataset_path, DMAConstants.CSV_FILE_NAME))
@@ -64,9 +82,21 @@ class ColorClassificationAdapter(Adapter):
 
     def apply(self):
         self.imgs_data = {}
+        obj_id = 1   
         for img_f in self.all_dataset_imgs:
             f_name = os.path.basename(img_f)
-            self.imgs_data[f_name] = self.get_json_example()  # TODO: Create a specific JSON for the img
+            image = cv.imread(img_f)
+            image = cv.resize(image, (51, 48))
+            encoded_image = self.encode_image_to_base64(image)
+            self.imgs_data[f_name] = self.get_json_example()
+            self.imgs_data[f_name][1]['Detections'][0]['Data'] = encoded_image
+            current_time = time.time() + 10
+            self.imgs_data[f_name][0]['AcquisitionTime'] = current_time
+            self.imgs_data[f_name][1]['AcquisitionTime'] = current_time
+            self.imgs_data[f_name][1]['DetectionTime'] = current_time + 13
+            self.imgs_data[f_name][1]['Detections'][0]['ObjectID'] = obj_id
+            obj_id = obj_id + 1
+            
     
     def dump(self):
         for name, data in self.imgs_data.items():

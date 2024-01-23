@@ -10,6 +10,7 @@
 #####################
 import os
 import shutil
+import json
 
 ######################
 #   Modules Imports  #
@@ -71,6 +72,17 @@ class Common():
         if file.endswith("csv"):
             df = pd.read_csv(file)
         return df
+
+    @staticmethod
+    def read_json_file(file_path):
+        """
+        Read the content of a JSON file and return its data.
+        """
+        content = None
+        with open(file_path, 'r') as file:
+            content = json.load(file)
+        return content
+
 
     @staticmethod
     def save_pandas_df_to_file(df, file, csv=True):
