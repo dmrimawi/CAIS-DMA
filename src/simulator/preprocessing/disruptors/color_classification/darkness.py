@@ -29,7 +29,7 @@ from utils import DMAConstants
 
 
 class Dark(Disruptor):
-    def __init__(self, name: str, desc: str, dataset_path: str, output_path: str, value=-50) -> None:
+    def __init__(self, name: str, desc: str, dataset_path: str, output_path: str, value=-40) -> None:
         """
         This Disruptor apply darkness and brightness changes to an images with a specific value
         """
@@ -39,7 +39,7 @@ class Dark(Disruptor):
                             This Disruptor is darkening the images to a specific value = {}
                             It reads images and dumps images as well
                         """.format(self.value)
-        super().__init__(name, desc, dataset_path, output_path)
+        super().__init__(name, self.desc, dataset_path, output_path)
     
     def fetch_dataset(self):
         # Create a list of all images in the dataset

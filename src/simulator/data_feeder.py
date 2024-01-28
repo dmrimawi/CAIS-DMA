@@ -11,11 +11,12 @@
 import os
 import math
 import time
+import random
 
 ######################
 #   Modules Imports  #
 ######################
-
+import zmq
 
 ####################
 #   Local Imports  #
@@ -26,7 +27,8 @@ from utils import DMAConstants
 from utils.Exceptions.DMAException import DMAException
 from simulator.preprocessing.disruptors.disruptors_factory import DisruptorsFactory
 from simulator.preprocessing.adapters.adaptors_factory import AdaptorsFactory
-from simulator.preprocessing.streamers.zmq.zmq_pub_sub import ZeroMQHandler
+from simulator.streamers.zmq.zmq_pub_sub import ZeroMQHandler
+from actuator.action_selector import ActionSelector
 
 ################
 #   CONSTANTS  #
@@ -125,21 +127,87 @@ class DataFeeder():
         self.__pick_data_to_disrupt()
         self.__prepare_data()
 
-    def normal_stream(self):
+    def get_all_json_files_disrupted_normal(self):
+        """
+        This method returns a dictionarry with all files names
+        seperated into two classes disrupted and normal
+        """
+        all_json_files = {'normal': {'Red': list(), 'Green': list(), 'Blue': list()}, \
+                          'disrupted': {'Red': list(), 'Green': list(), 'Blue': list()}}
+        for _, item in self.data_frame.iterrows():
+            if item[DMAConstants.DISRUPTED_COL_TITLE] == 1:
+                all_json_files['disrupted'][item[DMAConstants.CSV_COL_COLOR]].append(os.path.join(self.output_path, \
+                                                    "{}.json".format(item[DMAConstants.FIELD_WITH_DATA_TITLE])))
+            else:
+                all_json_files['normal'][item[DMAConstants.CSV_COL_COLOR]].append(os.path.join(self.output_path, \
+                                                    "{}.json".format(item[DMAConstants.FIELD_WITH_DATA_TITLE])))
+        return all_json_files
+
+    def new_object(self, json_file, zmq_handler, obj_publisher, teaching_publisher, classifier_subscriber, \
+                   unclassifier_subscriber):
+        """
+        This method streams the new arriving object
+        """
+        time.sleep(1)
+        if Common.check_if_file_dir_exists(json_file):
+            received_data = None
+            clf_recieved_data = None
+            logging.info("Publishing the content of {}".format(json_file))
+            data = Common.read_json_file(json_file)
+            zmq_handler.publish_message(publisher_socket=obj_publisher, data=data)
+            while True:
+                try:
+                    try:
+                        clf_recieved_data = zmq_handler.receive_message(classifier_subscriber)
+                        received_data = clf_recieved_data
+                        break
+                    except zmq.Again as e:
+                        pass
+                    received_data = zmq_handler.receive_message(unclassifier_subscriber)
+                    break
+                except zmq.Again as e:
+                    pass
+            logging.info("Classification for: {}".format(received_data))
+            data[1]['Detections'][0]['Target'] = received_data['Target']
+            selector = ActionSelector(self.name, self.desc, os.path.join(self.output_path, self.csv_file), data)
+            data = selector.perform_action()
+            if data["Teaching"]:
+                zmq_handler.publish_message(publisher_socket=teaching_publisher, data=data)
+
+    def normal_stream(self, seperated=(46, 82, 83)):
         """
         Streaming data in order
         """
-        list_of_files = Common.list_all_directory_file_with_extention(self.output_path, "json")
-        zmq_handler = ZeroMQHandler(address=DMAConstants.PUBLISH_ADDRESS)
-        publisher = zmq_handler.create_publisher(port=DMAConstants.PUBLISH_PORT)
-        for f in list_of_files:
-            if Common.check_if_file_dir_exists(f):
-                logging.info("Publishing the content of {}".format(f))
-                data = Common.read_json_file(f)
-                zmq_handler.publish_message(publisher_socket=publisher, data=data)
-                time.sleep(10)
-        publisher.close()
-        zmq_handler.context.term()
+        zmq_handler = ZeroMQHandler()
+        obj_publisher = zmq_handler.create_publisher(address=DMAConstants.PUBLISH_ADDRESS, \
+                                                     port=DMAConstants.PUBLISH_PORT)
+        teaching_publisher = zmq_handler.create_publisher(address=DMAConstants.PUBLISH_ADDRESS, \
+                                                          port=DMAConstants.TEACHING_PORT)
+        classifier_subscriber = zmq_handler.create_subscriber(address=DMAConstants.SUBSCRIBE_ADDRESS, \
+                                                              port=DMAConstants.SUBSCRIBE_PORT)
+        unclassifier_subscriber = zmq_handler.create_subscriber(address=DMAConstants.SUBSCRIBE_ADDRESS, \
+                                                                port=DMAConstants.SUBSCRIBE_UNCLS_PORT)
+        choosen_objects = list()
+        json_dataset_files = self.get_all_json_files_disrupted_normal()
+        colors = ['Red', 'Green', 'Blue']
+        counter = 1
+        for i in range(0, len(seperated)):
+            data_type_to_stream = ('normal', 'disrupted')[i % 2 != 0]
+            for j in range(0, seperated[i]):
+                color = colors[j % 3]
+                logging.info(f"{counter}. Classifying a {data_type_to_stream} {color} Cube.")
+                object_to_stream = random.choice(json_dataset_files[data_type_to_stream][color])
+                while object_to_stream in choosen_objects:
+                    object_to_stream = random.choice(json_dataset_files[data_type_to_stream][color])
+                choosen_objects.append(object_to_stream)
+                self.new_object(object_to_stream, zmq_handler, obj_publisher, teaching_publisher, classifier_subscriber, \
+                                unclassifier_subscriber)
+                counter = counter + 1
+        obj_publisher.close()
+        classifier_subscriber.close()
+        teaching_publisher.close()
+        unclassifier_subscriber.close()
+        zmq_handler.terminate_context()
 
     def run(self):
         """

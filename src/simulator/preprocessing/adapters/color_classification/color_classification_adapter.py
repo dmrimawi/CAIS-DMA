@@ -13,6 +13,7 @@ import os
 import json
 import base64
 import time
+import random
 
 
 ######################
@@ -45,7 +46,7 @@ class ColorClassificationAdapter(Adapter):
                             This Adaptor convert the objects (images)
                             to a JSON format as the MLClassifier expects
                         """
-        super().__init__(name, desc, dataset_path, output_path)
+        super().__init__(name, self.desc, dataset_path, output_path)
 
     def get_json_example(self):
         """
@@ -76,28 +77,29 @@ class ColorClassificationAdapter(Adapter):
     def fetch_dataset(self):
         # Create a list of all images in the dataset
         data_frame = Common.load_files_pandas(os.path.join(self.dataset_path, DMAConstants.CSV_FILE_NAME))
-        self.all_dataset_imgs = list()
+        self.all_dataset_imgs = dict()
         for _, data in data_frame.iterrows():
-            self.all_dataset_imgs.append(os.path.join(self.dataset_path, data[DMAConstants.FIELD_WITH_DATA_TITLE]))
+            self.all_dataset_imgs[data[DMAConstants.CSV_COL_ID]] = os.path.join(self.dataset_path, \
+                                                                                data[DMAConstants.FIELD_WITH_DATA_TITLE])
 
     def apply(self):
         self.imgs_data = {}
-        obj_id = 1   
-        for img_f in self.all_dataset_imgs:
+        for id, img_f in self.all_dataset_imgs.items():
             f_name = os.path.basename(img_f)
             image = cv.imread(img_f)
-            image = cv.resize(image, (51, 48))
+            height = image.shape[0]
+            width = image.shape[1]
             encoded_image = self.encode_image_to_base64(image)
             self.imgs_data[f_name] = self.get_json_example()
+            self.imgs_data[f_name][1]['Detections'][0]['ObjectID'] = id
             self.imgs_data[f_name][1]['Detections'][0]['Data'] = encoded_image
+            self.imgs_data[f_name][1]['Detections'][0]['Height'] = height
+            self.imgs_data[f_name][1]['Detections'][0]['Width'] = width
             current_time = time.time() + 10
             self.imgs_data[f_name][0]['AcquisitionTime'] = current_time
             self.imgs_data[f_name][1]['AcquisitionTime'] = current_time
-            self.imgs_data[f_name][1]['DetectionTime'] = current_time + 13
-            self.imgs_data[f_name][1]['Detections'][0]['ObjectID'] = obj_id
-            obj_id = obj_id + 1
-            
-    
+            self.imgs_data[f_name][1]['DetectionTime'] = current_time + random.randrange(10, 20)
+
     def dump(self):
         for name, data in self.imgs_data.items():
             with open(os.path.join(self.output_path, "{}.json".format(name)), "w") as file:

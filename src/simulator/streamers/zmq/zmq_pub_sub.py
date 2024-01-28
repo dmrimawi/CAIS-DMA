@@ -9,8 +9,7 @@
 #   Native Imports  #
 #####################
 import json
-from threading import Thread
-
+import numpy as np
 
 ######################
 #   Modules Imports  #
@@ -28,17 +27,16 @@ import zmq
 
 
 class ZeroMQHandler:
-    def __init__(self, address):
+    def __init__(self):
         """
         Initialize the ZeroMQHandler with the given address.
 
         Parameters:
         - address (str): The address to be used for creating sockets.
         """
-        self.address = address
         self.context = zmq.Context()
 
-    def create_publisher(self, port):
+    def create_publisher(self, address, port):
         """
         Create and return a PUB socket for publishing messages.
 
@@ -49,10 +47,10 @@ class ZeroMQHandler:
         - zmq.Socket: The created publisher socket.
         """
         socket = self.context.socket(zmq.PUB)
-        socket.bind(f"tcp://{self.address}:{port}")
+        socket.bind(f"tcp://{address}:{port}")
         return socket
 
-    def create_subscriber(self, port, conflate=True):
+    def create_subscriber(self, address, port):
         """
         Create and return a SUB socket for subscribing to messages.
 
@@ -64,11 +62,23 @@ class ZeroMQHandler:
         - zmq.Socket: The created subscriber socket.
         """
         socket = self.context.socket(zmq.SUB)
-        socket.connect(f"tcp://{self.address}:{port}")
-        if conflate:
-            socket.setsockopt(zmq.CONFLATE, 1)  # Enable conflate
-        socket.setsockopt_string(zmq.SUBSCRIBE, '')  # Subscribe to all messages
+        socket.connect(f"tcp://{address}:{port}")
+        socket.setsockopt(zmq.SUBSCRIBE, b"")  # Subscribe to all messages
+        socket.setsockopt(zmq.CONFLATE, 1)  # Enable conflate
         return socket
+
+    def convert_to_json_serializable(self, data):
+        """
+        Recursively convert NumPy int64 objects to regular Python integers.
+        """
+        if isinstance(data, dict):
+            return {key: self.convert_to_json_serializable(value) for key, value in data.items()}
+        elif isinstance(data, list):
+            return [self.convert_to_json_serializable(item) for item in data]
+        elif isinstance(data, np.int64):
+            return int(data)
+        else:
+            return data
 
     def publish_message(self, publisher_socket, data):
         """
@@ -81,20 +91,32 @@ class ZeroMQHandler:
         Returns:
         - None
         """
+        data = self.convert_to_json_serializable(data)
         message = json.dumps(data)
         publisher_socket.send_string(message)
 
-    def receive_message(self, subscriber_socket, process_callback):
+    def receive_message(self, subscriber_socket):
         """
         Receive a message using the given subscriber socket and process it using the callback.
 
         Parameters:
         - subscriber_socket (zmq.Socket): The subscriber socket to use for receiving.
-        - process_callback (callable): The callback function to process the received data.
 
         Returns:
         - None
         """
         message = subscriber_socket.recv(flags=zmq.NOBLOCK).decode("utf-8")
         data = json.loads(message)
-        process_callback(data)
+        return data
+
+    def terminate_context(self):
+        """
+        Terminates the context object
+
+        Parameters:
+        - None
+
+        Returns:
+        - None
+        """
+        self.context.term()
