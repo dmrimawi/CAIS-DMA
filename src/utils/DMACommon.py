@@ -11,6 +11,7 @@
 import os
 import shutil
 import json
+import csv
 
 ######################
 #   Modules Imports  #
@@ -92,3 +93,26 @@ class Common():
         """
         if file.endswith("csv"):
             df.to_csv(file)
+
+    @staticmethod
+    def write_to_csv(data, filename, header=None):
+        """
+        This method write the data provided to the CSV file
+        filename: name of the file to create (experiment ID)
+        header: the header titles of the csv files
+        append: if true the data will be appended to the end of the file
+        -----
+        Returns
+        ------
+        """
+        mode = ("w", "a")[header is None]
+        try:
+            f = open(filename, mode, newline='')
+            writer = csv.writer(f)
+            if header is not None:
+                writer.writerow(header)
+            if data is not None:
+                writer.writerow(data)
+            f.close()
+        except Exception as exp:
+            raise Exception("Failed to write \n {} \n to csv file {} in mode {}: {}".format(data, filename, mode, str(exp)))

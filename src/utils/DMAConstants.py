@@ -16,6 +16,8 @@ DISRUPTORS = os.path.join(PREPROCESSING , "disruptors")
 CSV_FILE_NAME = "objects_colors_dataset.csv"
 CSV_HUMAN_ACTION = "HumanAction.csv"
 CSV_AUTONOMOUS_ACTION = "AutonomousAction.csv"
+CSV_FINAL_DUMP = "actions_log.csv"
+CSV_FINAL_DUMP_HEADERS = ['ObjectID', 'Action', 'Target', 'HumanInteractions', 'CO2', 'Time']
 CSV_COL_CLASS_TITLE = "box"
 CSV_COL_ID = "id"
 CSV_COL_ACTION_CO2 = "CO2"
@@ -30,6 +32,7 @@ PUBLISH_PORT = "5556"
 SUBSCRIBE_PORT = "5558"
 SUBSCRIBE_UNCLS_PORT = "5559"
 TEACHING_PORT = "5557"
+DARKNESS_RATIO = -35
 # DECISION_MAKING
 DECISION_MAKING_SEC = "actuator"
 DECISION_MAKING = os.path.join(SRC , DECISION_MAKING_SEC)

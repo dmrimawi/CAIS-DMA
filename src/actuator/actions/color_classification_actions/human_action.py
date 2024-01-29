@@ -65,7 +65,6 @@ class HumanAction(Action):
         """
         This method overrides the perform action method
         """
-        # self.data[1]['Detections'][0]['Target'] = 
         obj_id = self.data[1]['Detections'][0]['ObjectID']
         dataset = Common.load_files_pandas(self.dataset_file)
         target = dataset[DMAConstants.CSV_COL_CLASS_TITLE][int(obj_id) - 1]

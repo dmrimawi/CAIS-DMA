@@ -29,7 +29,7 @@ from utils import DMAConstants
 
 
 class Dark(Disruptor):
-    def __init__(self, name: str, desc: str, dataset_path: str, output_path: str, value=-40) -> None:
+    def __init__(self, name: str, desc: str, dataset_path: str, output_path: str, value=DMAConstants.DARKNESS_RATIO) -> None:
         """
         This Disruptor apply darkness and brightness changes to an images with a specific value
         """
