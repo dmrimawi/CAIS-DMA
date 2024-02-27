@@ -108,5 +108,7 @@ class ExperimentDesign():
             data_feeder = DataFeeder(name, dataset, output_dir, csv_file, split_rate, \
                                      adapters=adapters, disruptors=disruptors)
             data_feeder.run()
+            if DMAConstants.CLEAN_DATASET_FILES:
+                data_feeder.clean()
         return 0
 

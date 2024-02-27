@@ -110,8 +110,9 @@ class ACRPlot():
         # Show the chart
         # labelLines(plt.gca().get_lines(), xvals=(max(x_data)-30, max(x_data)), zorder=2.5, align=True, backgroundcolor="none")
         plt.grid(True)
-        plt.draw()
-        plt.pause(.5)
+        if DMAConstants.SHOW_PLOT_DIAGRAM:
+            plt.draw()
+            plt.pause(.5)
         plt.savefig(os.path.join(os.path.dirname(self.csv_file), DMAConstants.ACR_DIAGRAM_FILENAME), format='pdf')
 
 

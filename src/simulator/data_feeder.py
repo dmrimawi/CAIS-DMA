@@ -239,6 +239,14 @@ class DataFeeder():
         self.close_all_zmqs(zmq_handler, [obj_publisher, teaching_publisher, classifier_subscriber, \
                                           unclassifier_subscriber])
 
+    def clean(self):
+        """
+        This method deletes the dataset files from the output directory
+        """
+        for _, item in self.data_frame.iterrows():
+            os.remove(os.path.join(self.output_path, item[DMAConstants.FIELD_WITH_DATA_TITLE]))
+            os.remove(os.path.join(self.output_path, "{}.json".format(item[DMAConstants.FIELD_WITH_DATA_TITLE])))
+
     def run(self):
         """
         This method provides the data after being preprocessed
