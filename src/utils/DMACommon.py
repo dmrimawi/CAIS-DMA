@@ -116,3 +116,11 @@ class Common():
             f.close()
         except Exception as exp:
             raise Exception("Failed to write \n {} \n to csv file {} in mode {}: {}".format(data, filename, mode, str(exp)))
+
+    @staticmethod
+    def write_dataframe_to_csv(df, file_path):
+        try:
+            df.to_csv(file_path, index=False)
+            print("DataFrame successfully written to CSV file:", file_path)
+        except Exception as e:
+            print("An error occurred while writing to CSV:", e)

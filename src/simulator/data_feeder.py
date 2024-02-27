@@ -29,6 +29,8 @@ from simulator.preprocessing.disruptors.disruptors_factory import DisruptorsFact
 from simulator.preprocessing.adapters.adaptors_factory import AdaptorsFactory
 from simulator.streamers.zmq.zmq_pub_sub import ZeroMQHandler
 from actuator.action_selector import ActionSelector
+from actuator.performance_measurements.ACR.autonomous_classification_ratio import ACR
+from monitoring.mvc.controllers.plot_acr.plot_acr import ACRPlot
 
 ################
 #   CONSTANTS  #
@@ -50,6 +52,8 @@ class DataFeeder():
         self.adapters = adapters
         self.disruptors = disruptors
         self.data_frame = None
+        self.compute_acr = None
+        self.plotting_act = None
 
     def __apply(self, obj):
         """
@@ -123,6 +127,10 @@ class DataFeeder():
         Common.copy_directory(self.dataset_path, workspace_path)
         self.dataset_path = workspace_path
         self.output_path = workspace_path
+        self.compute_acr = ACR(csv_file=os.path.join(self.output_path, DMAConstants.CSV_FINAL_DUMP), \
+                               time_frame_size=DMAConstants.TIME_FRAME_SIZE)
+        self.plotting_act = ACRPlot(csv_file=os.path.join(self.output_path, DMAConstants.CSV_FINAL_DUMP), \
+                                    time_frame_size=DMAConstants.TIME_FRAME_SIZE)
         self.data_frame = Common.load_files_pandas(os.path.join(self.output_path, self.csv_file))
         self.__pick_data_to_disrupt()
         self.__prepare_data()
@@ -143,8 +151,30 @@ class DataFeeder():
                                                     "{}.json".format(item[DMAConstants.FIELD_WITH_DATA_TITLE])))
         return all_json_files
 
+    def initiat_zmqs(self, zmq_handler):
+        obj_publisher = zmq_handler.create_publisher(address=DMAConstants.PUBLISH_ADDRESS, \
+                                                     port=DMAConstants.PUBLISH_PORT)
+        teaching_publisher = zmq_handler.create_publisher(address=DMAConstants.PUBLISH_ADDRESS, \
+                                                          port=DMAConstants.TEACHING_PORT)
+        classifier_subscriber = zmq_handler.create_subscriber(address=DMAConstants.SUBSCRIBE_ADDRESS, \
+                                                              port=DMAConstants.SUBSCRIBE_PORT)
+        unclassifier_subscriber = zmq_handler.create_subscriber(address=DMAConstants.SUBSCRIBE_ADDRESS, \
+                                                                port=DMAConstants.SUBSCRIBE_UNCLS_PORT)
+                                                                
+        return obj_publisher, teaching_publisher, classifier_subscriber, unclassifier_subscriber
+
+    def object_to_stream(self, allow_repeat, choosen_objects, json_dataset_files, data_type_to_stream, color):
+        object_to_stream = random.choice(json_dataset_files[data_type_to_stream][color])
+        if not allow_repeat:
+            object_id = Common.read_json_file(object_to_stream)[1]['Detections'][0]['ObjectID']
+            while object_id in choosen_objects:
+                object_to_stream = random.choice(json_dataset_files[data_type_to_stream][color])
+                object_id = Common.read_json_file(object_to_stream)[1]['Detections'][0]['ObjectID']
+            choosen_objects.append(object_id)
+        return object_to_stream, choosen_objects
+
     def new_object(self, json_file, zmq_handler, obj_publisher, teaching_publisher, classifier_subscriber, \
-                   unclassifier_subscriber):
+                   unclassifier_subscriber, cls_nmbr, data_type_to_stream):
         """
         This method streams the new arriving object
         """
@@ -164,29 +194,30 @@ class DataFeeder():
                     except zmq.Again as e:
                         pass
                     received_data = zmq_handler.receive_message(unclassifier_subscriber)
+                    logging.info(received_data)
                     break
                 except zmq.Again as e:
                     pass
-            logging.info("Classification for: {}".format(received_data))
             data[1]['Detections'][0]['Target'] = received_data['Target']
-            selector = ActionSelector(self.name, self.desc, os.path.join(self.output_path, self.csv_file), data)
+            data[1]['Detections'][0]['PredictProba'] = received_data['PredictProba']
+            data[1]['Detections'][0]['ObjectType'] = data_type_to_stream
+            selector = ActionSelector(self.name, self.desc, os.path.join(self.output_path, self.csv_file), data, \
+                                      int(cls_nmbr))
             data = selector.perform_action()
             if data["Teaching"]:
                 zmq_handler.publish_message(publisher_socket=teaching_publisher, data=data)
 
-    def normal_stream(self, seperated=(46, 82, 83)):
+    def close_all_zmqs(self, zmq_handler, zmqs):
+        for z in zmqs:
+            z.close()
+        zmq_handler.terminate_context()
+
+    def normal_stream(self, seperated=DMAConstants.STEADY_DISRUPTED_FIXED_ITERATIONS, allow_repeat=False):
         """
         Streaming data in order
         """
         zmq_handler = ZeroMQHandler()
-        obj_publisher = zmq_handler.create_publisher(address=DMAConstants.PUBLISH_ADDRESS, \
-                                                     port=DMAConstants.PUBLISH_PORT)
-        teaching_publisher = zmq_handler.create_publisher(address=DMAConstants.PUBLISH_ADDRESS, \
-                                                          port=DMAConstants.TEACHING_PORT)
-        classifier_subscriber = zmq_handler.create_subscriber(address=DMAConstants.SUBSCRIBE_ADDRESS, \
-                                                              port=DMAConstants.SUBSCRIBE_PORT)
-        unclassifier_subscriber = zmq_handler.create_subscriber(address=DMAConstants.SUBSCRIBE_ADDRESS, \
-                                                                port=DMAConstants.SUBSCRIBE_UNCLS_PORT)
+        obj_publisher, teaching_publisher, classifier_subscriber, unclassifier_subscriber = self.initiat_zmqs(zmq_handler)
         choosen_objects = list()
         json_dataset_files = self.get_all_json_files_disrupted_normal()
         colors = ['Red', 'Green', 'Blue']
@@ -194,20 +225,19 @@ class DataFeeder():
         for i in range(0, len(seperated)):
             data_type_to_stream = ('normal', 'disrupted')[i % 2 != 0]
             for j in range(0, seperated[i]):
-                color = colors[j % 3]
+                col_indx = j%3
+                color = colors[col_indx]
                 logging.info(f"{counter}. Classifying a {data_type_to_stream} {color} Cube.")
-                object_to_stream = random.choice(json_dataset_files[data_type_to_stream][color])
-                while object_to_stream in choosen_objects:
-                    object_to_stream = random.choice(json_dataset_files[data_type_to_stream][color])
-                choosen_objects.append(object_to_stream)
-                self.new_object(object_to_stream, zmq_handler, obj_publisher, teaching_publisher, classifier_subscriber, \
-                                unclassifier_subscriber)
+                object_to_stream, choosen_objects = self.object_to_stream(allow_repeat, choosen_objects, \
+                                                                          json_dataset_files, \
+                                                                        data_type_to_stream, color)
+                self.new_object(object_to_stream, zmq_handler, obj_publisher, teaching_publisher, \
+                                classifier_subscriber, unclassifier_subscriber, col_indx, data_type_to_stream)
                 counter = counter + 1
-        obj_publisher.close()
-        classifier_subscriber.close()
-        teaching_publisher.close()
-        unclassifier_subscriber.close()
-        zmq_handler.terminate_context()
+                self.compute_acr.add_acr_to_csv_file()
+                self.plotting_act.draw_graph(seperated[0], seperated[0] + seperated[1])
+        self.close_all_zmqs(zmq_handler, [obj_publisher, teaching_publisher, classifier_subscriber, \
+                                          unclassifier_subscriber])
 
     def run(self):
         """
