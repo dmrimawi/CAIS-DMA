@@ -49,6 +49,8 @@ class Main():
         """
         parser.add_argument('-t', '--time-frame-size', dest='time_frame', default=5,
                             help='Time frame size to compute ACR')
+        parser.add_argument('-s', '--states-lengths', dest='states_lengths', default="50,100,100",
+                            help='The steady, disrupted and final states lengths')
         parser = parser.parse_args()
         return parser
 
@@ -60,6 +62,13 @@ class Main():
         parser = self.add_args(parser=parser)
         global TIME_FRAME_SIZE
         DMAConstants.TIME_FRAME_SIZE = int(parser.time_frame)
+        # Split the string by comma and convert each part to an integer
+        integer_list = [int(x) for x in parser.states_lengths.split(',')]
+        # Construct a tuple from the list of integers
+        integer_tuple = tuple(integer_list)
+        global STEADY_DISRUPTED_FIXED_ITERATIONS
+        DMAConstants.STEADY_DISRUPTED_FIXED_ITERATIONS = integer_tuple
+        logging.info(f"Iterations to run are: {DMAConstants.STEADY_DISRUPTED_FIXED_ITERATIONS}")
         exp_des = ExperimentDesign(self.sorting_type)
         return exp_des.run()
 

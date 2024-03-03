@@ -212,10 +212,11 @@ class DataFeeder():
             z.close()
         zmq_handler.terminate_context()
 
-    def normal_stream(self, seperated=DMAConstants.STEADY_DISRUPTED_FIXED_ITERATIONS, allow_repeat=False):
+    def normal_stream(self, seperated=(50, 100, 100), allow_repeat=False):
         """
         Streaming data in order
         """
+        logging.info(f"The seperation will be based on {seperated}")
         zmq_handler = ZeroMQHandler()
         obj_publisher, teaching_publisher, classifier_subscriber, unclassifier_subscriber = self.initiat_zmqs(zmq_handler)
         choosen_objects = list()
@@ -257,4 +258,5 @@ class DataFeeder():
         else:
             raise DMAException("Missing adapters, Adapters are important to prepare data in the same structure \
                                expected by the CAIS under test.")
-        self.normal_stream()
+        logging.info(f"The seperation will be based on {DMAConstants.STEADY_DISRUPTED_FIXED_ITERATIONS}")
+        self.normal_stream(seperated=DMAConstants.STEADY_DISRUPTED_FIXED_ITERATIONS)

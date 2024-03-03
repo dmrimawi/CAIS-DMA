@@ -89,7 +89,7 @@ class ACRPlot():
             plt.plot(x_data, trending_line, linewidth=0.5, color='black')
         else:
             plt.plot(x_data, y_data, linewidth=0.5, color='black')
-        plt.xticks(np.arange(0, max(x_data)+10, 10))
+        plt.xticks(np.arange(0, max(x_data)+20, 20))
 
         # Plot lines
         # if steady < len(x_data):
