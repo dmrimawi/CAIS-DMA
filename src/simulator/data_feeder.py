@@ -201,10 +201,8 @@ class DataFeeder():
             data[1]['Detections'][0]['Target'] = received_data['Target']
             data[1]['Detections'][0]['PredictProba'] = received_data['PredictProba']
             data[1]['Detections'][0]['ObjectType'] = data_type_to_stream
-            need_mechanism = self.compute_acr.evaluate_acr_values(update_csv_file=False)
-            need_mechanism = False
             selector = ActionSelector(self.name, self.desc, os.path.join(self.output_path, self.csv_file), data, \
-                                      int(cls_nmbr), need_mechanism)
+                                      int(cls_nmbr))
             data = selector.perform_action()
             if data["Teaching"]:
                 zmq_handler.publish_message(publisher_socket=teaching_publisher, data=data)
@@ -214,21 +212,20 @@ class DataFeeder():
             z.close()
         zmq_handler.terminate_context()
 
-    def normal_stream(self, allow_repeat=False):
+    def normal_stream(self, seperated=(50, 100, 100), allow_repeat=False):
         """
         Streaming data in order
         """
-        logging.info(f"The seperation will be based on {DMAConstants.STEADY_DISRUPTED_FIXED_ITERATIONS}")
+        logging.info(f"The seperation will be based on {seperated}")
         zmq_handler = ZeroMQHandler()
         obj_publisher, teaching_publisher, classifier_subscriber, unclassifier_subscriber = self.initiat_zmqs(zmq_handler)
         choosen_objects = list()
         json_dataset_files = self.get_all_json_files_disrupted_normal()
         colors = ['Red', 'Green', 'Blue']
         counter = 1
-        for i in range(0, len(DMAConstants.STEADY_DISRUPTED_FIXED_ITERATIONS)):
+        for i in range(0, len(seperated)):
             data_type_to_stream = ('normal', 'disrupted')[i % 2 != 0]
-            j = 0
-            while j < DMAConstants.STEADY_DISRUPTED_FIXED_ITERATIONS[i]:
+            for j in range(0, seperated[i]):
                 col_indx = j%3
                 color = colors[col_indx]
                 logging.info(f"{counter}. Classifying a {data_type_to_stream} {color} Cube.")
@@ -238,11 +235,8 @@ class DataFeeder():
                 self.new_object(object_to_stream, zmq_handler, obj_publisher, teaching_publisher, \
                                 classifier_subscriber, unclassifier_subscriber, col_indx, data_type_to_stream)
                 counter = counter + 1
-                self.compute_acr.evaluate_acr_values()
-                self.plotting_act.draw_graph(DMAConstants.STEADY_DISRUPTED_FIXED_ITERATIONS[0], \
-                                             DMAConstants.STEADY_DISRUPTED_FIXED_ITERATIONS[0] + \
-                                                DMAConstants.STEADY_DISRUPTED_FIXED_ITERATIONS[1])
-                j = j + 1
+                self.compute_acr.add_acr_to_csv_file()
+                self.plotting_act.draw_graph(seperated[0], seperated[0] + seperated[1])
         self.close_all_zmqs(zmq_handler, [obj_publisher, teaching_publisher, classifier_subscriber, \
                                           unclassifier_subscriber])
 
@@ -265,4 +259,4 @@ class DataFeeder():
             raise DMAException("Missing adapters, Adapters are important to prepare data in the same structure \
                                expected by the CAIS under test.")
         logging.info(f"The seperation will be based on {DMAConstants.STEADY_DISRUPTED_FIXED_ITERATIONS}")
-        self.normal_stream()
+        self.normal_stream(seperated=DMAConstants.STEADY_DISRUPTED_FIXED_ITERATIONS)

@@ -49,12 +49,8 @@ class Main():
         """
         parser.add_argument('-t', '--time-frame-size', dest='time_frame', default=5,
                             help='Time frame size to compute ACR')
-        parser.add_argument('-k', '--desired-confidence-level', dest='confidence_level', default=0.40,
-                            help='The trust threshold for the estimated probability (K in [0, 1])')
         parser.add_argument('-s', '--states-lengths', dest='states_lengths', default="50,100,100",
                             help='The steady, disrupted and final states lengths')
-        parser.add_argument('-m', '--mechanism', dest='mechanism', default="Internal",
-                            help='The decision making policy: Internal, GRGame, or GROpt')
         parser = parser.parse_args()
         return parser
 
@@ -66,17 +62,13 @@ class Main():
         parser = self.add_args(parser=parser)
         global TIME_FRAME_SIZE
         DMAConstants.TIME_FRAME_SIZE = int(parser.time_frame)
-        global VALUE_OF_DESIRED_TRUST_LEVEL
-        DMAConstants.VALUE_OF_DESIRED_TRUST_LEVEL = float(parser.confidence_level)
         # Split the string by comma and convert each part to an integer
         integer_list = [int(x) for x in parser.states_lengths.split(',')]
         # Construct a tuple from the list of integers
         integer_tuple = tuple(integer_list)
         global STEADY_DISRUPTED_FIXED_ITERATIONS
         DMAConstants.STEADY_DISRUPTED_FIXED_ITERATIONS = integer_tuple
-        # Select decion-making policy
-        global SELECTED_MECHANISM
-        DMAConstants.SELECTED_MECHANISM = parser.mechanism
+        logging.info(f"Iterations to run are: {DMAConstants.STEADY_DISRUPTED_FIXED_ITERATIONS}")
         exp_des = ExperimentDesign(self.sorting_type)
         return exp_des.run()
 

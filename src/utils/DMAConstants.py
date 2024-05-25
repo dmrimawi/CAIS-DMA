@@ -17,17 +17,13 @@ HUMAN = "Human"
 AUTONOMOUS = "Autonomous"
 # STEADY_DISRUPTED_FIXED_ITERATIONS = (46, 82, 83)
 STEADY_DISRUPTED_FIXED_ITERATIONS = (50, 100, 100)
-FIX_AFTER_RECOVERED = True
 CSV_FILE_NAME = "objects_colors_dataset.csv"
 CSV_HUMAN_ACTION = "HumanAction.csv"
 CSV_AUTONOMOUS_ACTION = "AutonomousAction.csv"
 CSV_FINAL_DUMP = "actions_log.csv"
-CSV_SMOOTHING_FACTOR_HEADERS = ["HumRed", "HumGreen", "HumBlue", "EstARMCO2", "EstARMTime", "EstHumCO2", "EstHumTime"]
-CSV_FINAL_DUMP_HEADERS = ['ObjectID', 'Action', 'WithSupport', 'Target', 'HumanInteractions', 'CO2', 'Time', 'Missclassification', \
-                          'PredictProb', 'Max', 'Min', 'MaxDiff', 'MinDiff', 'ObjectType'] + CSV_SMOOTHING_FACTOR_HEADERS
+CSV_FINAL_DUMP_HEADERS = ['ObjectID', 'Action', 'Target', 'HumanInteractions', 'CO2', 'Time', 'Missclassification', \
+                          'PredictProb', 'Max', 'Min', 'MaxDiff', 'MinDiff', 'ObjectType']
 CSV_ACR_DUMP_FIELD_NAME = "ACR"
-DISRUPTED_STATE_INDEX = 2
-STATES_NAMES = ["None", "Steady", "Disrupted", "Final"]
 CSV_COL_CLASS_TITLE = "box"
 CSV_COL_ID = "id"
 CSV_COL_ACTION_CO2 = "CO2"
@@ -42,21 +38,17 @@ PUBLISH_PORT = "5556"
 SUBSCRIBE_PORT = "5558"
 SUBSCRIBE_UNCLS_PORT = "5559"
 TEACHING_PORT = "5557"
-DARKNESS_RATIO = -55
+DARKNESS_RATIO = -52
 TIME_FRAME_SIZE = 5
 ACR_DIAGRAM_FILENAME = "acr_diagram.pdf"
 CLEAN_DATASET_FILES = True
-SHOW_PLOT_DIAGRAM = True
-VALUE_OF_DESIRED_TRUST_LEVEL = 0.45
+SHOW_PLOT_DIAGRAM = False
 # DECISION_MAKING
 DECISION_MAKING_SEC = "actuator"
 DECISION_MAKING = os.path.join(SRC , DECISION_MAKING_SEC)
 ACTIONS = os.path.join(DECISION_MAKING , "actions")
 MECHANISMS = os.path.join(DECISION_MAKING , "mechanisms")
 PERFORMANCE_MEASUREMENTS = os.path.join(DECISION_MAKING , "performance_measurements")
-INTERNAL_MECHANISM = "Internal"
-SELECTED_MECHANISM = "Internal" # GRGame, GROpt, or Internal
-SMOOTHING_CONSTANT = 0.5
 # RESULTS
 RESULTS_SEC = "monitoring"
 RESULTS = os.path.join(SRC , RESULTS_SEC)
