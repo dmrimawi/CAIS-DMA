@@ -124,3 +124,24 @@ class Common():
             print("DataFrame successfully written to CSV file:", file_path)
         except Exception as e:
             print("An error occurred while writing to CSV:", e)
+
+    @staticmethod
+    def from_dict_of_dict_to_table(matrix):
+        """
+        It extracts the keys from the first inner dictionary of the matrix and uses them as column headers. 
+        It then prints the column headers and a line of dashes. After that, it iterates over each row of the 
+        matrix and prints the corresponding values in each column, separated by vertical bars.
+        """
+        # Extract keys from the first inner dictionary to use as column headers
+        columns = list(matrix[next(iter(matrix))].keys())
+        # Initialize the table string with column headers
+        table = ""
+        header = "|".join(columns)
+        table += header + "\n"
+        table += "-" * len(header) + "\n"
+        # Generate each row of the table
+        for key, inner_dict in matrix.items():
+            row_data = "|".join(str(inner_dict.get(col, "")) if not isinstance(inner_dict.get(col), list) and \
+                                isinstance(inner_dict.get(col), int) else str(inner_dict.get(col)) for col in columns)
+            table += row_data + "\n"
+        return table
