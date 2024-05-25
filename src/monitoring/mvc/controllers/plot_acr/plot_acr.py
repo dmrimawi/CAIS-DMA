@@ -109,7 +109,7 @@ class ACRPlot():
                 acr_under_performance = acr_values[i - 1]
                 while True:
                     i = i - 1
-                    if acr_values[i - 1] >= acr_under_performance:
+                    if acr_values[i - 1] > acr_under_performance:
                         acr_under_performance = acr_values[i - 1]
                     else:
                         potential_degradation = i + 1
@@ -126,11 +126,6 @@ class ACRPlot():
                     self.regions[STEADY_STATE][REGION_START_INDX] = 0
                     self.regions[STEADY_STATE][REGION_END_INDX] = 0
                     current_state = -1
-                # self.regions[STEADY_STATE][REGION_END_INDX] = potential_degradation
-                # self.regions[PERFORMANCE_DEGRADATION_STATE][REGION_START_INDX] = potential_degradation
-                # self.regions[PERFORMANCE_DEGRADATION_STATE][REGION_END_INDX] = iteration
-                # self.regions[RECOVERING_STATE][REGION_START_INDX] = iteration
-                # current_state = 2
             if DMAConstants.SELECTED_MECHANISM.lower() != DMAConstants.INTERNAL_MECHANISM.lower() and current_state > 0:
                 need_mechanism = bool(Common.load_files_pandas(self.csv_file).iloc[iteration-1]['NeedMechanism'])
                 if need_mechanism:
