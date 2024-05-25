@@ -202,7 +202,6 @@ class DataFeeder():
             data[1]['Detections'][0]['PredictProba'] = received_data['PredictProba']
             data[1]['Detections'][0]['ObjectType'] = data_type_to_stream
             need_mechanism = self.compute_acr.evaluate_acr_values(update_csv_file=False)
-            need_mechanism = False
             selector = ActionSelector(self.name, self.desc, os.path.join(self.output_path, self.csv_file), data, \
                                       int(cls_nmbr), need_mechanism)
             data = selector.perform_action()
