@@ -3,7 +3,8 @@
 #       Class Desciption
 # Author: Diaeddin Rimawi
 # Email: dmrimawi@gmail.com + drimawi@unibz.it
-# This module runs the main class
+# This module runs the main class, it builds the experiments with
+# given variables
 
 #####################
 #   Native Imports  #
