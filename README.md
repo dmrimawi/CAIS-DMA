@@ -18,6 +18,16 @@ More details about CAIS-DMA can be found in our paper [DOI](https://doi.org/10.1
 To use CAIS-DMA, please reference at least one of the following papers:
 
 ```
+Title = Modeling Resilience of Collaborative AI Systems
+Venue = Proceedings of the IEEE/ACM 3rd International Conference on AI Engineering-Software Engineering for AI
+Publisher = IEEE/ACM
+Authors = Rimawi, Diaeddin and Liotta, Antonio and Todescato, Marco and Russo, Barbara
+Year = 2024
+DOI = https://doi.org/10.1145/3644815.3644955
+PrePrint = https://arxiv.org/pdf/2401.12632
+Status = Published
+```
+```
 Title = CAIS-DMA: A Decision-Making Assistant for Collaborative AI Systems
 Venue = The International Conference on Product-Focused Software Process Improvement (PROFES) 
 Publisher = Springer, Cham
